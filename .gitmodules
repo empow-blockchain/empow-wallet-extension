@@ -1,0 +1,6 @@
+[submodule "modules/empow-blockchain-services"]
+	path = modules/empow-blockchain-services
+	url = https://github.com/violethair/empow-blockchain-services.git
+[submodule "modules/empow-wallet-generator"]
+	path = modules/empow-wallet-generator
+	url = https://github.com/violethair/empow-wallet-generator.git

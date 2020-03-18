@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #cecef8;
+      }
+
+      .cls-2 {
+        fill: #1bbc9a;
+      }
+
+      .cls-3 {
+        fill: #54697a;
+      }
+    </style>
+  </defs>
+  <g id="Group_2021" data-name="Group 2021" transform="translate(-687 -278)">
+    <rect id="Rectangle_2160" data-name="Rectangle 2160" class="cls-1" width="36" height="36" rx="8" transform="translate(687 278)"/>
+    <g id="maker-seeklogo.com" transform="translate(694 288.126)">
+      <g id="Group_15" data-name="Group 15" transform="translate(0 0.042)">
+        <path id="path0_fill" class="cls-2" d="M-293.724,144.488a.5.5,0,0,1,.525.047l8.757,6.578a.508.508,0,0,1,.2.4v7.522a.5.5,0,0,1-.5.5.5.5,0,0,1-.5-.5v-7.269L-293,145.937v13.1a.5.5,0,0,1-.5.5.5.5,0,0,1-.5-.5v-14.1A.5.5,0,0,1-293.724,144.488Z" transform="translate(294 -144.435)"/>
+      </g>
+      <g id="Group_16" data-name="Group 16" transform="translate(12.129 0.042)">
+        <path id="path1_fill" class="cls-3" d="M10.38,144.488a.5.5,0,0,1,.276.447v14.1a.5.5,0,1,1-1,0v-13.1L1.9,151.765v7.273a.5.5,0,1,1-1,0v-7.522a.492.492,0,0,1,.2-.4l8.75-6.582a.508.508,0,0,1,.528-.047Z" transform="translate(-0.9 -144.435)"/>
+      </g>
+    </g>
+  </g>
+</svg>

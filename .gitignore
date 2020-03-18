@@ -1,0 +1,5 @@
+node_modules
+build
+dev
+package-lock.json
+contentScript/injectScript.js

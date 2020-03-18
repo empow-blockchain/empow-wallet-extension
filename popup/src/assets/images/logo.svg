@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="135.25" height="108.755" viewBox="0 0 135.25 108.755">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f94f4f"/>
+      <stop offset="1" stop-color="#8e3ddf"/>
+    </linearGradient>
+  </defs>
+  <g id="Logo" transform="translate(4358.138 4353.339)">
+    <path id="Path_1588" data-name="Path 1588" class="cls-1" d="M277.212,169.111l32.47,54.02-6.018-.036c.192.319,6.935,11.625,6.935,11.625l21.1-.05-53.652-89.411c-1.057,1.691-73.069,108.635-73.069,108.635l117.137.12-47.956-80.36C275.475,171.644,277.354,168.765,277.212,169.111Zm-47.921,71.332s23.1-34.266,37.19-55.358l33.044,55.068Z" transform="translate(-4554.588 -4498.598)"/>
+    <path id="Path_1590" data-name="Path 1590" class="cls-1" d="M275.034,223.337l-69.9.155,36.991-55,2.9,4.819,7.478-11.116-9.7-16.676-60.651,89.64,99.837-.239Z" transform="translate(-4540.283 -4498.759)"/>
+  </g>
+</svg>

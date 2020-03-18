@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="36" height="36" viewBox="0 0 36 36">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="0.016" y1="0.016" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fd65a7"/>
+      <stop offset="1" stop-color="#962a9f"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_1974" data-name="Group 1974" transform="translate(-75.176 -341.054)">
+    <rect id="Rectangle_2159" data-name="Rectangle 2159" class="cls-1" width="36" height="36" rx="8" transform="translate(75.176 341.054)"/>
+    <g id="Group_1969" data-name="Group 1969" transform="translate(4442.075 4704.887)">
+      <path id="Path_1588" data-name="Path 1588" class="cls-2" d="M215.082,148.6l4.542,7.569-.842-.005.97,1.629,2.951-.007-7.5-12.528c-.148.237-10.22,15.222-10.22,15.222l16.384.017-6.708-11.26C214.839,148.956,215.1,148.553,215.082,148.6Zm-6.7,9.995s3.231-4.8,5.2-7.757l4.622,7.716Z" transform="translate(-4561.924 -4498.598)"/>
+      <path id="Path_1590" data-name="Path 1590" class="cls-2" d="M195.138,156.42l-9.778.022,5.174-7.707.405.675,1.046-1.557-1.357-2.337-8.483,12.56,13.964-.033Z" transform="translate(-4540.283 -4498.842)"/>
+    </g>
+  </g>
+</svg>

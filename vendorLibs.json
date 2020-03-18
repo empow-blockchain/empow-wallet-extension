@@ -1,0 +1,4 @@
+[
+    "./popup/node_modules/react",
+    "./popup/node_modules/react-dom"
+]

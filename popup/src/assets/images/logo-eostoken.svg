@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="36" height="36" viewBox="0 0 36 36">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-2, .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-3 {
+        font-size: 6px;
+        font-family: Poppins-Regular, Poppins;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="0.016" y1="0.016" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#a7e05f"/>
+      <stop offset="1" stop-color="#12ab97"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_1973" data-name="Group 1973" transform="translate(-75.176 -277.038)">
+    <rect id="Rectangle_2157" data-name="Rectangle 2157" class="cls-1" width="36" height="36" rx="8" transform="translate(75.176 277.038)"/>
+    <path id="Path_1545" data-name="Path 1545" class="cls-2" d="M218.683,11.543l-3.332,4.711-1.764,7.522,5.1,3.006,5.125-3-1.731-7.52Zm3.254,4.737-.877,2.756-2.313-4V11.845Zm-3.254-1.1,2.326,4.018-1.417,4.454h-1.8l-1.4-4.487Zm-.063-3.33v3.186L216.337,19l-.851-2.721Zm-3.213,4.658.836,2.655-2.415,4.192Zm.907,2.843,1.345,4.3h-3.841Zm-2.44,4.427H217.7l.878,2.8Zm3.988,0h1.684l-.864,2.732Zm.929,2.8.891-2.8,3.851,0Zm.931-2.928,1.37-4.305.685,1.18,1.809,3.126Zm2.161-3.192-.73-1.261L222,16.507l1.589,6.893Z" transform="translate(-125.385 269.269)"/>
+    <text id="Token" class="cls-3" transform="translate(84 307)"><tspan x="0" y="0">Token</tspan></text>
+  </g>
+</svg>

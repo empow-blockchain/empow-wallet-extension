@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="11.63" height="13.569" viewBox="0 0 11.63 13.569">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <path id="_ionicons_svg_logo-yen" class="cls-1" d="M75.631,32H73.208l-3.392,6.7L66.423,32H64l3.4,6.3H65.938v1.454h2.228l.437.939v.515H65.938v1.454H68.6v2.908h2.423V42.661h2.665V41.208H71.027v-.515l.451-.939h2.214V38.3H72.23Z" transform="translate(-64 -32)"/>
+</svg>
