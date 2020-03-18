@@ -27,7 +27,7 @@ class SettingController extends Component {
         };
 
         this.listController = {
-            changeNetWork: <ChangeNetworkController network={props.setting.network} onBack={this.onBackSetting} onBackHome={this.onBack}/>,
+            changeNetWork: <ChangeNetworkController networks={props.setting.networks} onBack={this.onBackSetting} onBackHome={this.onBack}/>,
             addToken: <AddTokenController onBack={this.onBackSetting}/>,
             currency: <CurrencyController currency={props.setting.currency} onBackHome={this.onBack} onBack={this.onBackSetting}/>,
             exportAccount: <ExportAccountController accountInfo={props.accountInfo} onBack={this.onBackSetting}/>,

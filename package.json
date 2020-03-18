@@ -41,12 +41,8 @@
     "eventemitter3": "^4.0.0",
     "extensionizer": "^1.0.1",
     "fast-deep-equal": "^2.0.1",
-    "firebase": "^6.2.4",
     "jquery": "^3.4.1",
     "shelljs": "^0.8.3",
-    "tronweb": "^2.6.4",
-    "uuid": "^3.3.2",
-    "web3": "^0.20.7",
-    "web3-utils": "^1.0.0-beta.55"
+    "uuid": "^3.3.2"
   }
 }

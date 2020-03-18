@@ -107,7 +107,7 @@ class BackgroundAPI extends EventEmitter {
             }
         }
 
-        this.tabResponse(uuid, messageUUID, StorageService.accounts.empow.address)
+        this.tabResponse(uuid, messageUUID, StorageService.selectedAccount.address)
     }
 
     empowSendTransaction(uuid, messageUUID, transaction) {
@@ -181,7 +181,6 @@ class BackgroundAPI extends EventEmitter {
     }
 
     async updateAfterUnlock (messageUUID) {
-        console.log('updateAfterUnlock')
         // set network
         WalletService.init()
         // update network

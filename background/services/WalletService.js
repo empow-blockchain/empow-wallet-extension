@@ -16,18 +16,19 @@ const WalletService = {
     init() {
         // update network setting for old users
         if (StorageService.ready) {
-            for (let key in NODE) {
-                if (!StorageService.setting.network.hasOwnProperty(key)) {
-                    StorageService.setting.network[key] = 'MAINNET'
-                    StorageService.saveSetting()
+            const { networks } = StorageService.setting
+
+            for (let i = 0; i < networks.length; i++) {
+                if (networks[i].selected) {
+                    EmpowService.init({
+                        networkURL: networks[i].url,
+                        apiURL: NODE.MAINNET.API_URL
+                    })
+
+                    return
                 }
             }
         }
-
-        EmpowService.init({
-            networkURL: NODE[StorageService.setting.network.MAINNET].URL,
-            apiURL: NODE[StorageService.setting.network.MAINNET].API_URL
-        })
     },
 
     createNewWallet() {
@@ -36,9 +37,7 @@ const WalletService = {
 
     getNetwork() {
         return {
-            empow: {
-                networkURL: EmpowService.networkURL
-            }
+            networkURL: EmpowService.networkURL
         }
     },
 

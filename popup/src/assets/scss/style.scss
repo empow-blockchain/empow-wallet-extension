@@ -834,10 +834,19 @@ textarea{
             text-align: center;
             p {
                 opacity: 0.8;
-                font-size: 15px;
+                font-size: 20px;
+                font-weight: bold;
             }
             h1 {
                 font-size: 27px;
+            }
+            .wapper-address {
+                display: flex;
+                background: #534e73;
+                margin-top: 5px;
+                border-radius: 16px;
+                justify-content: center;
+                padding: 3px;
             }
         }
     }
@@ -940,7 +949,7 @@ textarea{
     }
 }
 
-#coin-detail {
+#coin-detail, #home {
     .waper {
         .transaction-success {
             padding-bottom: 30px;
@@ -1378,6 +1387,10 @@ textarea{
                 background-color: #8e3ddf;   
                 border-radius: 8px;
             }
+        }
+
+        .checkbox input {
+            display: none;
         }
     
     }

@@ -57,7 +57,6 @@ const popup = {
 
             let setting = await PopupAPI.getSetting()
             this.store.dispatch(setSetting(setting))
-            this.store.dispatch(setToggle(setting.showLeftPanel))
 
             let allAccountInfo = await PopupAPI.getAllAccountInfo()
             this.store.dispatch(setAllAccountInfo(allAccountInfo))
@@ -97,7 +96,6 @@ const popup = {
 
         this.requestHandle.on('updateSetting', setting => {
             this.store.dispatch(setSetting(setting))
-            this.store.dispatch(setToggle(setting.showLeftPanel))
         })
     },
 

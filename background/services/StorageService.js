@@ -1,5 +1,6 @@
 import extensionizer from 'extensionizer'
 import Utils from '../../lib/utils'
+import {NODE} from '../../constants/index'
 
 const StorageService = {
     storageKey: [
@@ -36,10 +37,11 @@ const StorageService = {
         listCoinDisabled: {},
         currency: 'usd',
         autolock: 60 * 60 * 1000, // 60 minute
-        network: {
-            'MAINNET': 'MAINNET',
-            'TESTNET': 'TESTNET'
-        },
+        networks: [
+            {name: "MAINNET", url: NODE.MAINNET.URL, selected: true},
+            {name: "TESTNET", url: NODE.TESTNET.URL, selected: false}
+        ],
+        
     },
     password: false,
     ready: false,
