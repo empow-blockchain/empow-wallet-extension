@@ -66,10 +66,12 @@ const WalletService = {
     },
 
     restoreWallet(privateKey) {
-        var exist = StorageService.accounts.find(x => x.privateKey === privateKey)
-        if (exist) {
-            StorageService.saveSelectedAccount(exist)
-            return
+        if (StorageService.accounts && StorageService.accounts.length > 0) {
+            var exist = StorageService.accounts.find(x => x.privateKey === privateKey)
+            if (exist) {
+                StorageService.saveSelectedAccount(exist)
+                return
+            }
         }
 
         const wallet = EmpowService.restoreWallet(privateKey)
@@ -106,11 +108,10 @@ const WalletService = {
         callback()
     },
 
-    setAccounts (accounts) {
-        console.log("1")
+    setAccounts(accounts) {
         if (!accounts.find(x => x.address === StorageService.selectedAccount.address)) {
             StorageService.selectedAccount = accounts[0]
-            
+
         }
         StorageService.accounts = accounts
         StorageService.saveAccounts()

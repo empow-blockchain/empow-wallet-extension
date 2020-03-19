@@ -14,7 +14,10 @@ class ChangeNetworkController extends Component {
         super(props);
 
         this.state = {
-            networks: props.networks
+            networks: props.networks,
+            name: '',
+            nodeUrl: '',
+            error: false
         }
     }
 
@@ -39,34 +42,62 @@ class ChangeNetworkController extends Component {
         this.props.onBackHome()
     }
 
+    onAddNote = () => {
+        var { networks, name, nodeUrl } = this.state
+
+        this.setState({
+            error: false
+        })
+        if (!name || !nodeUrl) {
+            this.setState({
+                error: 'Chua nhap du thong tin'
+            })
+            return
+        }
+
+        if (networks.find(x => x.url.toLowerCase() === nodeUrl.toLocaleLowerCase())) {
+            this.setState({
+                error: 'Trung url'
+            })
+            return;
+        }
+
+        PopupAPI.addNetwork({ name: this.state.name, url: this.state.nodeUrl, selected: true })
+        this.props.onBackHome()
+    }
+
     renderAddNode() {
         return (
             <div className="right-panel bg-general" id="add-node">
                 <div className="header">
                     <img onClick={this.props.onBack} src={ArrowLeft} className="btn-back"></img>
                 </div>
-
                 <div className="wrapper">
                     <div style={{ marginBottom: '40px' }}>
                         <div className="one-input">
                             <p>Name</p>
-                            <input type="text" name="contractAddress" onBlur={(e) => this.setState({ [e.target.name]: e.target.value })}></input>
+                            <input type="text" name="name" onBlur={(e) => this.setState({ [e.target.name]: e.target.value })}></input>
                         </div>
                         <div className="one-input">
                             <p>Node URL</p>
-                            <input type="text" name="name" onBlur={(e) => this.setState({ [e.target.name]: e.target.value })}></input>
+                            <input type="text" name="nodeUrl" onBlur={(e) => this.setState({ [e.target.name]: e.target.value })}></input>
                         </div>
                     </div>
-                    <Button isLoading={this.state.loading} onClick={this.onSave}>Save</Button>
+                    <Button isLoading={this.state.loading} onClick={this.onAddNote}>Save</Button>
+
+                    {this.state.error && <div className="alert" style={{marginTop: '10px'}}>{this.state.error}</div>}
                 </div>
+
+
             </div>
         )
     }
 
     render() {
-        const { networks } = this.state
-
-        // return this.renderAddNode()
+        const { networks, isShowAddNote } = this.state
+        if (isShowAddNote) {
+            return this.renderAddNode()
+        }
 
         return (
             <div className="right-panel bg-general" id="change-network">
@@ -90,7 +121,7 @@ class ChangeNetworkController extends Component {
                         )
                     })}
                 </ul>
-                <div className="add-node">
+                <div className="add-node" onClick={() => { this.setState({ isShowAddNote: true }) }}>
                     <img className="img-circle" src={CreateIcon}></img>
                     <p>Add Node</p>
                 </div>

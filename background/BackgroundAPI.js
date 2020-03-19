@@ -150,6 +150,14 @@ class BackgroundAPI extends EventEmitter {
         this.popupUpdate('updateSetting', StorageService.setting)
     }
 
+    addNetwork(messageUUID, network) {
+        StorageService.setting.networks.push(network)
+        StorageService.saveSetting()
+        WalletService.changeNetwork(network, async () => {
+            this.popupUpdate('updateAppState', await WalletService.getAppState())
+        })
+    }
+
     getSelectedAccount(messageUUID) {
         this.popupResponse(messageUUID, StorageService.selectedAccount)
     }
@@ -252,7 +260,7 @@ class BackgroundAPI extends EventEmitter {
     }
 
     async setAccounts(messageUUID, accounts) {
-        WalletService.setAccounts(accounts)        
+        WalletService.setAccounts(accounts)
     }
 
     async send(messageUUID, data) {

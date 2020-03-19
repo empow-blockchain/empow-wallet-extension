@@ -85,6 +85,11 @@ const PopupAPI = {
             this.handle.send('Request', 'setSetting', {property, data}, resolve, reject)
         ))
     },
+    addNetwork(network) {
+        return new Promise((resolve,reject) => (
+            this.handle.send('Request', 'addNetwork', network, resolve, reject)
+        ))
+    },
     // addToken (type, contractAddress, name, symbol, decimal) {
     //     return new Promise((resolve,reject) => (
     //         this.handle.send('Request', 'addToken', {type, contractAddress, name, symbol, decimal}, resolve, reject)
