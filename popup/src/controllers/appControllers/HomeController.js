@@ -18,6 +18,10 @@ import ImgTransactionSuccess from '../../assets/images/img-transaction-success.s
 import { QRCode } from "react-qr-svg";
 import ButtonCopy from '../../components/ButtonCopy';
 import IconCopy2 from '../../assets/images/icon-copy2.svg'
+import ArrowDown from '../../assets/images/arrow-down.svg'
+import DeleteIcon from '../../assets/images/delete-icon.svg'
+import CreateIcon from '../../assets/images/icon-create.svg'
+import RestoreIcon from '../../assets/images/icon-restore.svg'
 
 class HomeController extends Component {
     constructor(props) {
@@ -27,8 +31,6 @@ class HomeController extends Component {
             loading: true,
             totalBalance: 0,
             totalBalanceBtc: 0,
-            isShowCoin: true,
-            isShowToken: true,
             route: null,
             showRamEM: false,
             showGas: false,
@@ -50,7 +52,8 @@ class HomeController extends Component {
             sendAmount: 0,
             sendMemo: '',
             stakeNetValue: 0,
-            unstakeNetValue: 0
+            unstakeNetValue: 0,
+            showSwitchWallet: false
         }
     }
 
@@ -329,7 +332,6 @@ class HomeController extends Component {
 
     renderListCoin() {
 
-        const { isShowCoin, isShowToken } = this.state
         const { setting } = this.props
 
         return (
@@ -685,8 +687,59 @@ class HomeController extends Component {
             </div>
         )
     }
+
+    renderListWallet() {
+        return (
+            <div className="overlay">
+                <ul className="list-wallet">
+                    <li>
+                        <div className="left">
+                            <p className="label">My Wallet</p>
+                            <p className="address">EM2ZsN1rxJs8pz53WDs...</p>
+                        </div>
+                        <div className="right">
+                            <p className="balance">150.34 EM</p>
+                            <div className="delete"><img src={DeleteIcon}></img></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div className="left">
+                            <p className="label">My Wallet</p>
+                            <p className="address">EM2ZsN1rxJs8pz53WDs...</p>
+                        </div>
+                        <div className="right">
+                            <p className="balance">150.34 EM</p>
+                            <div className="delete"><img src={DeleteIcon}></img></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div className="left">
+                            <p className="label">My Wallet</p>
+                            <p className="address">EM2ZsN1rxJs8pz53WDs...</p>
+                        </div>
+                        <div className="right">
+                            <p className="balance">150.34 EM</p>
+                            <div className="delete"><img src={DeleteIcon}></img></div>
+                        </div>
+                    </li>
+                    <li className="import-wallet">
+                        <div>
+                            <img className="img-circle" src={CreateIcon}></img>
+                            <p className="create">Create Wallet</p>
+                        </div>
+                        <div>
+                            <p className="import">Import Wallet</p>
+                            <img className="img-circle" src={RestoreIcon}></img>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        )
+    }
+
     renderContent() {
 
+        const { showSwitchWallet } = this.state
         const { setting } = this.props
         const accountInfo = this.props.accountInfo[0]
         let gasPercent = (accountInfo.gasLimit - accountInfo.gasUsed) / accountInfo.gasLimit * 100
@@ -697,17 +750,26 @@ class HomeController extends Component {
                 <div className="waper-header">
                     <div className="header">
                         <img onClick={() => this.showSearch()} src={IconSearch} className="btn-search"></img>
+
+                        <div className="switch-wallet" onClick={() => this.setState({showSwitchWallet: !showSwitchWallet})}>
+                            <p className="title">Switch Wallet <img className="arrow-down" src={ArrowDown}></img></p>
+                        </div>
+
+                        {showSwitchWallet && this.renderListWallet()}
+
                         <div className="header-right">
-                            <img onClick={() => this.showSetting()} src={IconSetting}></img>
+                            <img style={{cursor: "pointer"}} onClick={() => this.showSetting()} src={IconSetting}></img>
                         </div>
                     </div>
                     <div className="titler">
-                        <p>{Utils.formatCurrency(accountInfo.balance)} {accountInfo.symbol}</p>
-                        <p>{CURRENCY_SYMBOL[setting.currency.toUpperCase()]} {parseFloat(accountInfo.balance * accountInfo.marketData[setting.currency]).toFixed(2).toString()}</p>
-                        <div className="wapper-address">
-                            <p style={{fontSize: '12px'}}>{accountInfo.address.substring(0, 30) + '...  '}</p>
+                        <p className="balance">{Utils.formatCurrency(accountInfo.balance, 2)} {accountInfo.symbol}</p>
+                        {/* <p>{CURRENCY_SYMBOL[setting.currency.toUpperCase()]} {parseFloat(accountInfo.balance * accountInfo.marketData[setting.currency]).toFixed(2).toString()}</p> */}
+                        <p style={{ fontSize: '14px', marginTop: 10 }}>Selected Username</p>
+                        <p style={{ fontSize: '10px' }}>{accountInfo.address}</p>
+                        {/* <div className="copy-with-text">
                             <ButtonCopy copyText={accountInfo.address} />
-                        </div>
+                            <span>COPY</span>
+                        </div> */}
                     </div>
                 </div>
 
