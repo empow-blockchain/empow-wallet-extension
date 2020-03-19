@@ -19,7 +19,6 @@ const EmpowService = {
     createNewWallet() {
         this.wallet = empowjs.Wallet.create()
         this.privateKey = this.wallet.privateKey
-        console.log(this.wallet)
         return this.privateKey
     },
 
@@ -151,7 +150,6 @@ const EmpowService = {
     sendAction(tx, status = 'pending') {
         return new Promise(async (resolve, reject) => {
             // assign prototype
-            console.log(tx);
             let tempTx = this.empow.callABI(tx.actions[0].contract, tx.actions[0].actionName, JSON.parse(tx.actions[0].data))
             if (tx.amount_limit) tempTx.amount_limit = tx.amount_limit
             if (tx.gasLimit) tempTx.gasLimit = tx.gasLimit
@@ -213,7 +211,6 @@ const EmpowService = {
                     count++
                 }
 
-                // console.log(result)
                 resolve(result)
             } catch (error) {
                 resolve([])

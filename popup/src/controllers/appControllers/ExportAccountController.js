@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import ArrowLeft from '../../assets/images/arrow-left.svg'
 import IconSearch from '../../assets/images/icon-search.svg'
 import IconCopy from '../../assets/images/icon-copy.svg'
@@ -14,28 +14,29 @@ class ExportAccountController extends Component {
         super(props);
 
         this.state = {
-            filterResult: props.accountInfo,
+            filterResult: props.accounts,
             ready: false,
             password: '',
-            error:false
+            error: false
         }
     }
 
     onSearch = (e) => {
-        const { accountInfo } = this.props
+        const { accounts } = this.props
         let query = e.target.value
         query = query.trim().toLowerCase()
 
         let result = []
 
-        if(query.trim() == '') {
+        if (query.trim() == '') {
             this.setState({
-                filterResult: accountInfo
+                filterResult: accounts
             })
         } else {
-            accountInfo.map( (value, index) => {
-                if(value.name.toLowerCase().search(query) != -1 || value.symbol.toLowerCase().search(query) != -1) {
-                    result.push(Object.assign(value, {index}))
+            accounts.map((value, index) => {
+                var key = value.username || value.address
+                if (key.toLowerCase().search(query) != -1) {
+                    result.push(Object.assign(value, { index }))
                 }
             })
 
@@ -64,19 +65,19 @@ class ExportAccountController extends Component {
         })
     }
 
-    renderPassword () {
+    renderPassword() {
         return (
             <div className="right-panel bg-login" id="register">
-                <div style={ {textAlign: 'left'} }>
+                <div style={{ textAlign: 'left' }}>
                     <img src={ArrowLeft} className="btn-back" onClick={this.props.onBack}></img>
                 </div>
                 <img src={Logo} className="logo"></img>
                 <form>
-                    { this.state.error && <div className="alert">{this.state.error}</div>}
+                    {this.state.error && <div className="alert">{this.state.error}</div>}
                     <div>
                         <div className="one-input">
                             <p>Type your password</p>
-                            <input type={this.state.showPassword ? "text" : "password"} name="password" onChange={(e) => this.setState({password: e.target.value})}></input>
+                            <input type={this.state.showPassword ? "text" : "password"} name="password" onChange={(e) => this.setState({ password: e.target.value })}></input>
                         </div>
                     </div>
                     <Button onClick={this.onSubmit}>Continue</Button>
@@ -87,78 +88,49 @@ class ExportAccountController extends Component {
 
     renderExport() {
 
-        const { accountInfo } = this.props
+        const { accounts } = this.props
         const { filterResult } = this.state
 
         return (
             <div className="right-panel bg-general" id="export-account">
                 <div>
                     <img onClick={this.props.onBack} src={ArrowLeft} className="btn-back"></img>
-                    <div className="input-search" style={{float: 'right'}}>
+                    <div className="input-search" style={{ float: 'right' }}>
                         <img src={IconSearch}></img>
                         <input placeholder="Search" onChange={this.onSearch}></input>
                     </div>
                 </div>
 
                 <ul className="menu-general-3 scroll">
-                    {filterResult.map( (value,index) => {
+                    {filterResult.map((value, index) => {
 
-                        if (value.customToken || value.type == 'BEP2') {
-                            value.logo = `logo_${value.type.toLowerCase()}`
-                        } else {
-                            value.logo = `logo_${value.symbol.toLowerCase()}`
-                        }
-
+                        var key = value.username || `Wallet ${index + 1}`
                         return (
                             <li>
-                                { value.type == 'coin' ? 
-                                    <div className={`logo-circle logo-${value.name.toLowerCase()}`}>
-                                        <img src={CoinIcon[value.name.toLowerCase()]}></img>
-                                    </div>
-                                :
-                                    <div className="logo-token">
-                                        <img src={CoinIcon[value.logo]}></img>
-                                    </div>
-                                }
-                                <div className="content">
-                                    <p>{value.name.length <= 8 ? value.name : value.name.substring(0,8) + '...'}</p>
-                                    <p>{value.symbol}</p>
-                                </div>
                                 <div className="group">
-                                    {value.publicKey && 
-                                        <div className="waper">
-                                            <p>Public Key</p>
-                                            <div className="key">
-                                                <p>{value.publicKey.length <= 16 ? value.publicKey : value.publicKey.substring(0,16) + '...'}</p>
-                                                <ButtonCopy copyText={value.publicKey}></ButtonCopy>
-                                            </div>
+                                    <div className="waper">
+                                        <p>Name</p>
+                                        <div className="key">
+                                            <p>{key}</p>
+                                            <ButtonCopy copyText={value.address}></ButtonCopy>
                                         </div>
-                                    }
+                                    </div>
+
+                                    <div className="waper">
+                                        <p>Address</p>
+                                        <div className="key">
+                                            <p>{value.address.length <= 25 ? value.address : value.address.substring(0, 25) + '...'}</p>
+                                            <ButtonCopy copyText={value.address}></ButtonCopy>
+                                        </div>
+                                    </div>
+
                                     <div className="waper">
                                         <p>Private Key</p>
                                         <div className="key">
-                                            <p>{value.privateKey.length <= 16 ? value.privateKey : value.privateKey.substring(0,16) + '...'}</p>
+                                            <p>{value.privateKey.length <= 25 ? value.privateKey : value.privateKey.substring(0, 25) + '...'}</p>
                                             <ButtonCopy copyText={value.privateKey}></ButtonCopy>
                                         </div>
                                     </div>
-                                    { value.ownerPublicKey &&
-                                        <React.Fragment>
-                                            <div className="waper">
-                                                <p>Owner Public Key</p>
-                                                <div className="key">
-                                                    <p>{value.ownerPublicKey.length <= 16 ? value.ownerPublicKey : value.ownerPublicKey.substring(0,16) + '...'}</p>
-                                                    <ButtonCopy copyText={value.ownerPublicKey}></ButtonCopy>
-                                                </div>
-                                            </div>
-                                            <div className="waper">
-                                                <p>Owner Private Key</p>
-                                                <div className="key">
-                                                    <p>{value.ownerPrivateKey.length <= 16 ? value.ownerPrivateKey : value.ownerPrivateKey.substring(0,16) + '...'}</p>
-                                                    <ButtonCopy copyText={value.ownerPrivateKey}></ButtonCopy>
-                                                </div>
-                                            </div>
-                                        </React.Fragment>
-                                    }
                                 </div>
                             </li>
                         )
@@ -168,10 +140,10 @@ class ExportAccountController extends Component {
         );
     }
 
-    render () {
+    render() {
         const { ready } = this.state
 
-        if(ready) return this.renderExport()
+        if (ready) return this.renderExport()
 
         return this.renderPassword()
     }

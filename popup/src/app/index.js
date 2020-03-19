@@ -59,13 +59,13 @@ class App extends React.Component {
                 dom = <HomeController accounts={accounts} accountInfo={selectedAccount} setting={setting} />
                 break;
             case APP_STATE.COIN_DETAIL:
-                dom = <CoinDetailController accountInfo={selectedAccount}/>
+                dom = <CoinDetailController accountInfo={selectedAccount} setting={setting}/>
                 break;
             case APP_STATE.SEARCH:
-                dom = <SearchController accountInfo={allAccountInfo} setting={setting} />
+                dom = <SearchController accountInfo={selectedAccount} setting={setting} />
                 break;
             case APP_STATE.SETTING:
-                dom = <SettingController accountInfo={allAccountInfo} setting={setting} />
+                dom = <SettingController accounts={accounts} accountInfo={selectedAccount} setting={setting} />
                 break;
             case APP_STATE.SIGN_TRANSACTION:
                 dom = <SignTransactionController transaction={transactionQueue} />;

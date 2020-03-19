@@ -20,15 +20,15 @@ export const CURRENCY_SYMBOL = {
     JPY: '¥'
 }
 
-export const TX_API = "https://emscan.io/tx/"
-
 export const NODE = {
     MAINNET: {
         URL: "https://node.empow.io",
-        API_URL: "https://api.empow.io"
+        API_URL: "https://api.empow.io",
+        TX_URL: 'https://emscan.io/tx',
     },
     TESTNET: {
         URL: "https://node-testnet.empow.io",
-        API_URL: "https://api-testnet.empow.io"
+        API_URL: "https://api-testnet.empow.io",
+        TX_URL: 'https://testnet.emscan.io/tx'
     }
 }

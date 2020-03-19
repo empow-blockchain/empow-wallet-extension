@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import IconCopy from '../../assets/images/icon-copy.svg'
 import LoadingIcon from '../../assets/images/loading.svg'
 import ArrowLeft from '../../assets/images/arrow-left.svg'
@@ -6,6 +6,7 @@ import PopupAPI from 'popup/PopupAPI'
 import Button from '../../components/Button'
 import ButtonCopy from '../../components/ButtonCopy'
 import { APP_STATE } from 'constants/index'
+import StorageService from '../../../../background/services/StorageService'
 
 class CreateNewWalletController extends Component {
 
@@ -19,14 +20,19 @@ class CreateNewWalletController extends Component {
         };
     };
 
-    onBack = (e) => {
-        PopupAPI.setAppState(APP_STATE.UNLOCKED)
+    onBack = async (e) => {
+        if (await StorageService.dataExists()) {
+            PopupAPI.setAppState(APP_STATE.READY)
+        } else {
+            PopupAPI.setAppState(APP_STATE.UNLOCKED)
+        }
+
     }
 
     onSubmit = (e) => {
         e.preventDefault()
 
-        if(!this.state.privateKey || this.state.privateKey.trim() == '') return this.setState({error: 'Private key not blank'})
+        if (!this.state.privateKey || this.state.privateKey.trim() == '') return this.setState({ error: 'Private key not blank' })
 
         this.setState({
             error: false,
@@ -40,10 +46,9 @@ class CreateNewWalletController extends Component {
             })
         })
     }
-    
-    componentDidMount () {
+
+    componentDidMount() {
         PopupAPI.createNewWallet().then(res => {
-            console.log(res)
             this.setState({
                 error: false,
                 loading: false,
@@ -56,14 +61,14 @@ class CreateNewWalletController extends Component {
         return (
             <div className="right-panel bg-login" id="create-new-wallet">
                 <div className="loading">
-                    <img src={LoadingIcon}/>
+                    <img src={LoadingIcon} />
                     <p>Creating . . .</p>
                 </div>
             </div>
-        ) 
+        )
     }
 
-    renderError () {
+    renderError() {
         return (
             <div className="right-panel bg-login" id="create-new-wallet">
                 <div className="alert">{this.state.error}</div>
@@ -71,16 +76,16 @@ class CreateNewWalletController extends Component {
         )
     }
 
-    renderSuccess () {
+    renderSuccess() {
         return (
             <div className="right-panel bg-login" id="create-new-wallet">
                 <img src={ArrowLeft} className="btn-back" onClick={(e) => this.onBack(e)}></img>
 
                 <div className="waperTextarea">
                     <textarea disabled spellCheck="false" placeholder="Private key phrase" rows="4" defaultValue={this.state.privateKey}></textarea>
-                    <ButtonCopy copyText={this.state.privateKey}/>
+                    <ButtonCopy copyText={this.state.privateKey} />
                 </div>
-                
+
                 <div className="alert alert-primary">Please write down Private Key Phrase and keep the copy in a secure place</div>
                 <Button onClick={(e) => this.onSubmit(e)}>Continue</Button>
             </div>
@@ -88,8 +93,8 @@ class CreateNewWalletController extends Component {
     }
 
     render() {
-        if(this.state.loading) return this.renderLoading();
-        if(this.state.error) return this.renderError();
+        if (this.state.loading) return this.renderLoading();
+        if (this.state.error) return this.renderError();
         return this.renderSuccess()
     }
 }

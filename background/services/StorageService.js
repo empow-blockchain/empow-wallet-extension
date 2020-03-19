@@ -38,8 +38,8 @@ const StorageService = {
         currency: 'usd',
         autolock: 60 * 60 * 1000, // 60 minute
         networks: [
-            { name: "MAINNET", url: NODE.MAINNET.URL, selected: true },
-            { name: "TESTNET", url: NODE.TESTNET.URL, selected: false }
+            { name: "MAINNET", url: NODE.MAINNET.URL, selected: true, apiURL: NODE.MAINNET.API_URL, txUrl: NODE.MAINNET.TX_URL },
+            { name: "TESTNET", url: NODE.TESTNET.URL, selected: false, apiURL: NODE.TESTNET.API_URL, txUrl: NODE.TESTNET.TX_URL }
         ],
 
     },

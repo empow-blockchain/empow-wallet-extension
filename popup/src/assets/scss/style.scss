@@ -1397,6 +1397,12 @@ textarea {
         .checkbox input {
             display: none;
         }
+
+        li {
+            &:hover .delete {
+                margin-right: 0px;
+            }
+        }
     }
 
     .add-node {
@@ -1406,6 +1412,26 @@ textarea {
             display: inline-block;
             vertical-align: 10px;
             margin-left: 10px;
+        }
+    }
+
+    .delete {
+        display: inline-flex;
+        margin-left: 10px;
+        margin-right: -60px;
+        // position: absolute;
+        // top: 7px;
+        // right: 10px;
+        width: 35px;
+        height: 35px;
+        background-color: #e74c3c;
+        justify-content: center;
+        align-items: center;
+        border-radius: 18px;
+        transition: all 0.3s ease;
+        img {
+            width: 15px;
+            height: 15px;
         }
     }
 }
@@ -1459,11 +1485,9 @@ textarea {
         margin-top: 25px;
         height: 500px;
         overflow-y: auto;
-    }
-
-    .logo-circle,
-    .logo-token {
-        margin-right: 10px;
+        .group {
+            width: 100%;
+        }
     }
 
     .key p {

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import IconSearch from '../../assets/images/icon-search.svg'
 import IconMinue from '../../assets/images/icon-minue.svg'
 import Switch from '../../components/Switch';
@@ -12,12 +12,12 @@ class SearchController extends Component {
         super(props);
 
         this.state = {
-            filterResult: this.props.accountInfo
+            filterResult: [this.props.accountInfo]
         }
     }
 
     onClick = (index) => {
-        const {filterResult} = this.state
+        const { filterResult } = this.state
         const coinIndex = filterResult[index].index ? filterResult[index].index : index
         PopupAPI.setSelectedCoin(coinIndex)
         PopupAPI.setAppState(APP_STATE.READY)
@@ -26,7 +26,7 @@ class SearchController extends Component {
     onToggle = (symbol) => {
         let { listCoinDisabled } = this.props.setting
 
-        if(!listCoinDisabled.hasOwnProperty(symbol)) {
+        if (!listCoinDisabled.hasOwnProperty(symbol)) {
             listCoinDisabled[symbol] = true
         } else {
             listCoinDisabled[symbol] = !listCoinDisabled[symbol]
@@ -43,42 +43,42 @@ class SearchController extends Component {
         PopupAPI.setAppState(APP_STATE.READY)
     }
 
-    renderListCoin () {
+    renderListCoin() {
 
         const { filterResult } = this.state
-        const { showZeroBalance,listCoinDisabled } = this.props.setting
+        const { showZeroBalance, listCoinDisabled } = this.props.setting
 
-        
+
 
         return (
             <ul className="menu-general-2 scroll">
-                { filterResult.map( (value, index) => {
+                {filterResult.map((value, index) => {
 
                     let isEnabled = true;
-                    if(!showZeroBalance && (value.balance == 0 || !value.balance)) return;
-                    if(listCoinDisabled.hasOwnProperty(value.symbol.toLowerCase())) isEnabled = !listCoinDisabled[value.symbol.toLowerCase()]
+                    // if(!showZeroBalance && (value.balance == 0 || !value.balance)) return;
+                    // if(listCoinDisabled.hasOwnProperty(value.symbol.toLowerCase())) isEnabled = !listCoinDisabled[value.symbol.toLowerCase()]
 
-                    if (value.customToken || value.type == 'BEP2') {
-                        value.logo = `logo_${value.type.toLowerCase()}`
-                    } else {
-                        value.logo = `logo_${value.symbol.toLowerCase()}`
-                    }
+                    // if (value.customToken || value.type == 'BEP2') {
+                    //     value.logo = `logo_${value.type.toLowerCase()}`
+                    // } else {
+                    //     value.logo = `logo_${value.symbol.toLowerCase()}`
+                    // }
 
                     return (
                         <li key={index}>
-                            { value.type == 'coin' ? 
-                                <div className={`logo-square logo-${value.name.toLowerCase()}`} onClick={() => this.onClick(index)}>
-                                    <img src={CoinIcon[value.name.toLowerCase()]}></img>
+                            {value.type == 'coin' ?
+                                <div className={`logo-square logo-empow`} onClick={() => this.onClick(index)}>
+                                    <img src={CoinIcon['empow']}></img>
                                 </div>
-                            :
+                                :
                                 <div className="logo-token" onClick={() => this.onClick(index)}>
-                                    <img src={CoinIcon[value.logo]}></img>
+                                    <img src={CoinIcon['empow']}></img>
                                 </div>
                             }
-                            
+
                             <div className="content" onClick={() => this.onClick(index)}>
-                                <p>{ value.name }</p>
-                                <p>{ value.balance} {value.symbol}</p>
+                                <p>EMPOW</p>
+                                <p>{value.balance} EM</p>
                             </div>
                             <Switch defaultValue={isEnabled} onChange={() => this.onToggle(value.symbol.toLowerCase())}></Switch>
                         </li>
@@ -95,14 +95,14 @@ class SearchController extends Component {
 
         let result = []
 
-        if(query.trim() == '') {
+        if (query.trim() == '') {
             this.setState({
                 filterResult: accountInfo
             })
         } else {
-            accountInfo.map( (value, index) => {
-                if(value.name.toLowerCase().search(query) != -1 || value.symbol.toLowerCase().search(query) != -1) {
-                    result.push(Object.assign(value, {index}))
+            accountInfo.map((value, index) => {
+                if (value.name.toLowerCase().search(query) != -1 || value.symbol.toLowerCase().search(query) != -1) {
+                    result.push(Object.assign(value, { index }))
                 }
             })
 
@@ -114,7 +114,7 @@ class SearchController extends Component {
 
     toggleZeroBalance = () => {
 
-        const {showZeroBalance} = this.props.setting
+        const { showZeroBalance } = this.props.setting
 
         PopupAPI.setSetting('showZeroBalance', !showZeroBalance)
     }
@@ -137,7 +137,7 @@ class SearchController extends Component {
                         <img src={IconMinue} ></img>
                     </div>
                 </div>
-                { this.renderListCoin() }
+                {this.renderListCoin()}
             </div>
         );
     }

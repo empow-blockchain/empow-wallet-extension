@@ -158,6 +158,17 @@ class BackgroundAPI extends EventEmitter {
         })
     }
 
+    deleteNetwork(messageUUID, url) {
+        StorageService.setting.networks = StorageService.setting.networks.filter(x => x.url !== url)
+        if (!StorageService.setting.networks.find(x => x.selected === true)) {
+            StorageService.setting.networks[0].selected = true
+        }
+        StorageService.saveSetting()
+        WalletService.changeNetwork(url, async () => {
+            this.popupUpdate('updateAppState', await WalletService.getAppState())
+        })
+    }
+
     getSelectedAccount(messageUUID) {
         this.popupResponse(messageUUID, StorageService.selectedAccount)
     }

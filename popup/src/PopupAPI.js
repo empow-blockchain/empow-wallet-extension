@@ -90,6 +90,11 @@ const PopupAPI = {
             this.handle.send('Request', 'addNetwork', network, resolve, reject)
         ))
     },
+    deleteNetwork(url) {
+        return new Promise((resolve,reject) => (
+            this.handle.send('Request', 'deleteNetwork', url, resolve, reject)
+        ))
+    },
     // addToken (type, contractAddress, name, symbol, decimal) {
     //     return new Promise((resolve,reject) => (
     //         this.handle.send('Request', 'addToken', {type, contractAddress, name, symbol, decimal}, resolve, reject)

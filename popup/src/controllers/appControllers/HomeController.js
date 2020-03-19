@@ -10,7 +10,7 @@ import Select from 'react-select';
 import PopupAPI from 'popup/PopupAPI'
 import equal from 'fast-deep-equal'
 import IconClose from '../../assets/images/icon-close.svg'
-import { APP_STATE, CURRENCY_SYMBOL, TX_API } from 'constants/index'
+import { APP_STATE, CURRENCY_SYMBOL } from 'constants/index'
 import Utils from 'lib/utils'
 import Button from '../../components/Button'
 import '../../assets/css/rangeslider.css';
@@ -57,17 +57,17 @@ class HomeController extends Component {
 
     async componentDidMount() {
         const { accountInfo } = this.props
-        console.log(accountInfo)
         if (!accountInfo) return;
         this.setState({
             loading: false,
         })
     }
 
-    componentDidUpdate(prevProps) {
+    async componentDidUpdate(prevProps) {
         if (equal(this.props, prevProps)) return;
         const { accountInfo } = this.props
         if (!accountInfo) return;
+
         this.setState({
             loading: false,
         })
@@ -569,10 +569,11 @@ class HomeController extends Component {
     }
 
     renderTransactionSuccess() {
-        const { sendSuccess } = this.state
+        var { sendSuccess } = this.state
+        var { setting } = this.props
 
-        let txURL = ''
-        txURL = TX_API + sendSuccess
+        var selectedNetwork = setting.networks.find(x => x.selected === true)
+        var txURL = `${selectedNetwork.txUrl}/${sendSuccess}`
 
         if (sendSuccess == 'Send Transaction successfully') txURL = '#'
 
@@ -585,7 +586,7 @@ class HomeController extends Component {
                         <p className="title">Transaction success</p>
                         <img src={ImgTransactionSuccess}></img>
                         <p className="text">Click link below</p>
-                        <a target="_blank" href={txURL}>{sendSuccess <= 30 ? sendSuccess : sendSuccess.substring(0, 30) + '...'}</a>
+                        <a target="_blank" href={txURL}>{sendSuccess.length <= 30 ? sendSuccess : sendSuccess.substring(0, 30) + '...'}</a>
                         <p></p>
                     </div>
                 </div>
@@ -720,7 +721,7 @@ class HomeController extends Component {
                         </div>
                     </div>
                     <div className="titler">
-                        <p className="balance">{Utils.formatCurrency(accountInfo.balance, 2)} EM</p>
+                        <p className="balance">{Utils.formatCurrency(accountInfo.balance, 8)} EM</p>
                         {/* <p>{CURRENCY_SYMBOL[setting.currency.toUpperCase()]} {parseFloat(accountInfo.balance * accountInfo.marketData[setting.currency]).toFixed(2).toString()}</p> */}
                         <p style={{ fontSize: '14px', marginTop: 10 }}>{accountInfo.username}</p>
                         <p style={{ fontSize: '10px' }}>{accountInfo.address}</p>

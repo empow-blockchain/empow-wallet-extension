@@ -30,7 +30,7 @@ class SettingController extends Component {
             changeNetWork: <ChangeNetworkController networks={props.setting.networks} onBack={this.onBackSetting} onBackHome={this.onBack}/>,
             addToken: <AddTokenController onBack={this.onBackSetting}/>,
             currency: <CurrencyController currency={props.setting.currency} onBackHome={this.onBack} onBack={this.onBackSetting}/>,
-            exportAccount: <ExportAccountController accountInfo={props.accountInfo} onBack={this.onBackSetting}/>,
+            exportAccount: <ExportAccountController accounts={props.accounts} onBack={this.onBackSetting}/>,
             changePassword: <ChangePasswordController onBack={this.onBackSetting}/>,
             autoLock: <AutoLockController autolock={props.setting.autolock} onBack={this.onBackSetting}/>
         }

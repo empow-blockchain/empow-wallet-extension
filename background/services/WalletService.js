@@ -22,7 +22,7 @@ const WalletService = {
                 if (networks[i].selected) {
                     EmpowService.init({
                         networkURL: networks[i].url,
-                        apiURL: NODE.MAINNET.API_URL
+                        apiURL: networks[i].apiURL
                     })
 
                     return
@@ -59,9 +59,6 @@ const WalletService = {
         }
 
         if (this.transactionQueue) this.appState = APP_STATE.SIGN_TRANSACTION
-
-        console.log(this.appState)
-
         return this.appState
     },
 
@@ -102,8 +99,6 @@ const WalletService = {
 
         const data = await EmpowService.getAccountInfo()
         StorageService.selectedAccount = Object.assign(StorageService.selectedAccount, data)
-
-        console.log("abc")
 
         callback()
     },

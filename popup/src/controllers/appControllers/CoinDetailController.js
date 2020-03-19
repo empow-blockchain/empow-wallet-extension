@@ -3,7 +3,7 @@ import ArrowLeft from '../../assets/images/arrow-left.svg'
 import IconEmpty from '../../assets/images/icon-empty.svg'
 import PopupAPI from '../../PopupAPI';
 import Utils from 'lib/utils'
-import { TX_API, APP_STATE } from 'constants/index'
+import { NODE, APP_STATE } from 'constants/index'
 
 class CoinDetailController extends Component {
 
@@ -16,13 +16,11 @@ class CoinDetailController extends Component {
         };
     };
 
-    componentDidMount() {
+    async componentDidMount() {
         PopupAPI.getTransactionHistories(this.props.accountInfo).then(res => {
             this.setState({
                 histories: res
             })
-        }).catch(error => {
-            console.log("ERROR" + error);
         })
     }
 
@@ -32,9 +30,12 @@ class CoinDetailController extends Component {
 
     renderListTransactions() {
 
-        const { accountInfo } = this.props
+        const { accountInfo, setting } = this.props
         const { histories, transactionFilter } = this.state
 
+        var selectedNetwork = setting.networks.find(x => x.selected === true)
+        var txURL = selectedNetwork.txUrl
+       
         if (!histories) return;
 
         let listTransaction = []
@@ -74,7 +75,7 @@ class CoinDetailController extends Component {
                 {histories.length > 0 && <ul className="scroll">
                     {listTransaction.map((value, index) => {
                         return (<li key={index}>
-                            <a href={TX_API + value.txid} target="_blank" className="content">
+                            <a href={`${txURL}/${value.txid}`} target="_blank" className="content">
                                 <p>{value.address.length > 24 ? value.address.substring(0, 24) + '...' : value.address}</p>
                                 <p className="time">{typeof value.time == 'number' ? Utils.formatTime(value.time) : value.time}</p>
                             </a>
