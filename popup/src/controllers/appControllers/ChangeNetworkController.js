@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
 import ArrowLeft from '../../assets/images/arrow-left.svg'
+import CreateIcon from '../../assets/images/icon-create.svg'
 import Button from '../../components/Button'
 import { NODE } from 'constants/index'
 
@@ -18,10 +19,10 @@ class ChangeNetworkController extends Component {
     }
 
     onClick = (name) => {
-        
+
         let { networks } = this.state
 
-        for (let i = 0; i < networks.length; i++) { 
+        for (let i = 0; i < networks.length; i++) {
             networks[i].selected = false
             if (networks[i].name === name) {
                 networks[i].selected = true
@@ -38,13 +39,39 @@ class ChangeNetworkController extends Component {
         this.props.onBackHome()
     }
 
+    renderAddNode() {
+        return (
+            <div className="right-panel bg-general" id="add-node">
+                <div className="header">
+                    <img onClick={this.props.onBack} src={ArrowLeft} className="btn-back"></img>
+                </div>
+
+                <div className="wrapper">
+                    <div style={{ marginBottom: '40px' }}>
+                        <div className="one-input">
+                            <p>Name</p>
+                            <input type="text" name="contractAddress" onBlur={(e) => this.setState({ [e.target.name]: e.target.value })}></input>
+                        </div>
+                        <div className="one-input">
+                            <p>Node URL</p>
+                            <input type="text" name="name" onBlur={(e) => this.setState({ [e.target.name]: e.target.value })}></input>
+                        </div>
+                    </div>
+                    <Button isLoading={this.state.loading} onClick={this.onSave}>Save</Button>
+                </div>
+            </div>
+        )
+    }
+
     render() {
-        const { networks} = this.state
+        const { networks } = this.state
+
+        // return this.renderAddNode()
+
         return (
             <div className="right-panel bg-general" id="change-network">
                 <img onClick={this.props.onBack} src={ArrowLeft} className="btn-back"></img>
                 <ul className="menu-general-2">
-
                     {networks.map((value, index) => {
                         return (
                             <li key={index} onClick={() => this.onClick(value.name)}>
@@ -55,7 +82,7 @@ class ChangeNetworkController extends Component {
                                     <p style={{ textTransform: 'capitalize' }}>{value.name.toLowerCase()}</p>
                                     <p>{value.url}</p>
                                 </div>
-                                <label className="checkbox" style={{float: 'right'}}>
+                                <label className="checkbox" style={{ float: 'right' }}>
                                     <input type="radio" name="radio" checked={value.selected} />
                                     <span className="checkmark"></span>
                                 </label>
@@ -63,6 +90,10 @@ class ChangeNetworkController extends Component {
                         )
                     })}
                 </ul>
+                <div className="add-node">
+                    <img className="img-circle" src={CreateIcon}></img>
+                    <p>Add Node</p>
+                </div>
                 <Button onClick={this.onSave}>Save</Button>
             </div>
         );

@@ -1398,6 +1398,16 @@ textarea {
             display: none;
         }
     }
+
+    .add-node {
+        margin-bottom: 30px;
+        cursor: pointer;
+        p {
+            display: inline-block;
+            vertical-align: 10px;
+            margin-left: 10px;
+        }
+    }
 }
 
 #add-token {

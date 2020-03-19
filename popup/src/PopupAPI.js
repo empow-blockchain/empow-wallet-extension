@@ -100,7 +100,6 @@ const PopupAPI = {
             this.handle.send('Request', 'changePassword', password, resolve, reject)
         ))
     },
-   
     buyRamEM (bytes) {
         return new Promise((resolve,reject) => (
             this.handle.send('Request', 'buyRamEM', bytes, resolve, reject)
