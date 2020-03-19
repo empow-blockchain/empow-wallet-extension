@@ -16,7 +16,6 @@ const EmpowService = {
         this.rpc = new empowjs.RPC(new empowjs.HTTPProvider(options.networkURL))
     },
 
-
     createNewWallet() {
         this.wallet = empowjs.Wallet.create()
         this.privateKey = this.wallet.privateKey
@@ -97,9 +96,23 @@ const EmpowService = {
         }
     },
 
-    async getAccountInfo() {
+    async getBalanceAndUsername(address) {
+        try {
+            const result = await this.rpc.blockchain.getAccountInfo(address)
+            const username = await this.rpc.blockchain.getContractStorage("auth.empow", `s_${address}`, "", true)
+            return {
+                balance: result.balance,
+                username: username.data === 'null' ? null : username.data
+            }
+        } catch (err) {
+            return {}
+        }
+    },
+
+    async getAccountInfo(address) {
         try {
             const result = await this.rpc.blockchain.getAccountInfo(this.address)
+            const username = await this.rpc.blockchain.getContractStorage("auth.empow", `s_${this.address}`, "", true)
             const ram = await this.getRamPrice()
             var maxUnpledge = 0;
             for (let i = 0; i < result.gas_info.pledged_info.length; i++) {
@@ -114,7 +127,8 @@ const EmpowService = {
                 ramLimit: result.ram_info.total,
                 ramUsed: result.ram_info.used,
                 ramPrice: ram.data.buy_price,
-                maxUnpledge
+                maxUnpledge,
+                username: username.data === 'null' ? null : username.data
             }
         } catch (err) {
             return {}

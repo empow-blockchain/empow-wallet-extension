@@ -1,6 +1,6 @@
 import extensionizer from 'extensionizer'
 import Utils from '../../lib/utils'
-import {NODE} from '../../constants/index'
+import { NODE } from '../../constants/index'
 
 const StorageService = {
     storageKey: [
@@ -38,10 +38,10 @@ const StorageService = {
         currency: 'usd',
         autolock: 60 * 60 * 1000, // 60 minute
         networks: [
-            {name: "MAINNET", url: NODE.MAINNET.URL, selected: true},
-            {name: "TESTNET", url: NODE.TESTNET.URL, selected: false}
+            { name: "MAINNET", url: NODE.MAINNET.URL, selected: true },
+            { name: "TESTNET", url: NODE.TESTNET.URL, selected: false }
         ],
-        
+
     },
     password: false,
     ready: false,
@@ -53,8 +53,8 @@ const StorageService = {
     getStorage(key) {
         return new Promise(resolve => (
             this.storage.get(key, data => {
-                if(key in data)
-                    return resolve(data[ key ]);
+                if (key in data)
+                    return resolve(data[key]);
 
                 resolve(false);
             })
@@ -65,27 +65,27 @@ const StorageService = {
         return !!(await this.getStorage('accounts'));
     },
 
-    async unlock (password) {
-        return new Promise( async (resolve, reject) => {
-            if(this.ready) return reject('Wallet has unlocked')
-            if(!this.dataExists) return reject('Data not exist')
+    async unlock(password) {
+        return new Promise(async (resolve, reject) => {
+            if (this.ready) return reject('Wallet has unlocked')
+            if (!this.dataExists) return reject('Data not exist')
 
             try {
-                for(var i = 0; i < this.storageKey.length; i++) {
+                for (var i = 0; i < this.storageKey.length; i++) {
                     let key = this.storageKey[i];
-    
+
                     const encrypted = await this.getStorage(key);
-    
-                    if(!encrypted)
+
+                    if (!encrypted)
                         continue;
-    
-                    this[ key ] = Utils.decrypt(
+
+                    this[key] = Utils.decrypt(
                         encrypted,
                         password
                     )
 
                 }
-                
+
                 this.ready = true
                 this.password = password
 
@@ -97,12 +97,12 @@ const StorageService = {
     },
 
     async addToken(type, address, name, symbol, decimal) {
-        return new Promise( (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             // check exist type
-            if(!this.token.hasOwnProperty(type)) return reject(`${type} is not exist`)
+            if (!this.token.hasOwnProperty(type)) return reject(`${type} is not exist`)
             // check exist symbol
             const symbolLower = symbol.toLowerCase()
-            if(this.token[type].hasOwnProperty(symbolLower)) return reject(`${name} already exist. You need remove and add again`)
+            if (this.token[type].hasOwnProperty(symbolLower)) return reject(`${name} already exist. You need remove and add again`)
             // add
             this.token[type][symbolLower] = {
                 address,
@@ -118,7 +118,7 @@ const StorageService = {
     },
 
     async removeToken(type, symbol) {
-        return new Promise( (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             try {
                 delete this.token[type][symbol.toLowerCase()]
             } catch (err) {
@@ -127,20 +127,20 @@ const StorageService = {
         })
     },
 
-    addWhitelist (contractAddress, timeExpired) {
+    addWhitelist(contractAddress, timeExpired) {
         this.whitelist[contractAddress] = timeExpired
         this.saveWhitelist()
     },
 
-    checkWhitelist (contractAddress) {
-        if(!this.whitelist.hasOwnProperty(contractAddress)) return false;
+    checkWhitelist(contractAddress) {
+        if (!this.whitelist.hasOwnProperty(contractAddress)) return false;
         const timeExpired = this.whitelist[contractAddress]
-        if(typeof timeExpired != 'number') return false;
-        if(timeExpired == -1) return true;
+        if (typeof timeExpired != 'number') return false;
+        if (timeExpired == -1) return true;
 
         const now = new Date().getTime()
 
-        if(now > timeExpired) {
+        if (now > timeExpired) {
             delete this.whitelist[contractAddress]
             return false;
         }
@@ -156,36 +156,43 @@ const StorageService = {
         this.saveSelectedAccount()
     },
 
-    saveWhitelist () {
+    saveWhitelist() {
         this.save('whitelist')
     },
 
-    saveAccounts (accounts = null) {
-        if(accounts) this.accounts = accounts
+    saveAccount(account = null) {
+        if (account) {
+            this.accounts = this.accounts || []
+            this.accounts.push(account)
+        }
+        this.save('accounts')
+    },
+
+    saveAccounts() {
         this.save('accounts')
     },
 
     // saveTokens () {
     //     this.save('tokens')
     // },
-    
-    saveSetting () {
+
+    saveSetting() {
         this.save('setting')
     },
 
     saveSelectedAccount(selectedAccount = null) {
-        if(selectedAccount) this.selectedAccount = selectedAccount
+        if (selectedAccount) this.selectedAccount = selectedAccount
         this.save('selectedAccount')
     },
 
     save(key) {
 
-        if(!this.ready) throw new Error("Storage service not ready")
+        if (!this.ready) throw new Error("Storage service not ready")
 
         this.storage.set({
-            [key] : Utils.encrypt(this[ key ], this.password)
+            [key]: Utils.encrypt(this[key], this.password)
         })
-        
+
     }
 }
 

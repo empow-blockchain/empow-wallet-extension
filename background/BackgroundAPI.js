@@ -2,27 +2,28 @@ import EventEmitter from 'eventemitter3'
 import StorageService from './services/StorageService'
 import WalletService from './services/WalletService'
 import { APP_STATE } from '../constants';
+import EmpowService from './services/EmpowService';
 
 class BackgroundAPI extends EventEmitter {
 
-    constructor () {
+    constructor() {
         super()
-        
+
         WalletService.init()
         this.checkAutoLock()
     }
 
-    checkAutoLock () {
-        let interaval = setInterval( () => {
+    checkAutoLock() {
+        let interaval = setInterval(() => {
 
-            if(!StorageService.ready) clearInterval(interaval)
+            if (!StorageService.ready) clearInterval(interaval)
 
             const now = new Date().getTime()
-            if(WalletService.lastRequestTime != 0 && StorageService.setting.autolock != 0 && now - WalletService.lastRequestTime >= StorageService.setting.autolock) {
+            if (WalletService.lastRequestTime != 0 && StorageService.setting.autolock != 0 && now - WalletService.lastRequestTime >= StorageService.setting.autolock) {
                 console.log("AUTO LOCK");
                 this.lock()
             }
-        },60 * 1000)
+        }, 60 * 1000)
     }
 
     onTabRequest(req) {
@@ -42,23 +43,23 @@ class BackgroundAPI extends EventEmitter {
         this[event](messageUUID, data)
     }
 
-    onPopupConnect() {	
-        if(!StorageService.ready || !StorageService.accounts) return;
+    onPopupConnect() {
+        if (!StorageService.ready || !StorageService.accounts) return;
 
         // start pool
-        WalletService.startPool( (index) => {
+        WalletService.startPool((index) => {
             this.popupUpdate('updateAccountInfo', {
                 index,
                 accountInfo: WalletService.accountInfo[index]
             })
-        })	
-    }	
-
-    onPopupDisconnect() {	
-        WalletService.stopPool()	
+        })
     }
 
-    tabResponse (uuid, messageUUID, data) {
+    onPopupDisconnect() {
+        WalletService.stopPool()
+    }
+
+    tabResponse(uuid, messageUUID, data) {
         this.emit('newTabResponse', {
             uuid,
             messageUUID,
@@ -66,7 +67,7 @@ class BackgroundAPI extends EventEmitter {
         })
     }
 
-    tabUpdate (event, data) {
+    tabUpdate(event, data) {
         this.emit('newTabUpdate', {
             event,
             data
@@ -89,15 +90,15 @@ class BackgroundAPI extends EventEmitter {
 
     // TAB REQUEST
     getNetwork(uuid, messageUUID) {
-        this.tabResponse(uuid,messageUUID, WalletService.getNetwork())
+        this.tabResponse(uuid, messageUUID, WalletService.getNetwork())
     }
 
-    getWalletInfo (uuid, messageUUID) {
+    getWalletInfo(uuid, messageUUID) {
         this.tabResponse(uuid, messageUUID, WalletService.getAddress())
     }
 
-    connectEmpowWallet (uuid, messageUUID) {
-        if(!StorageService.ready) {
+    connectEmpowWallet(uuid, messageUUID) {
+        if (!StorageService.ready) {
             WalletService.openPopup()
 
             return this.connectQueue = {
@@ -113,34 +114,34 @@ class BackgroundAPI extends EventEmitter {
     empowSendTransaction(uuid, messageUUID, transaction) {
         WalletService.empowTransaction(uuid, messageUUID, transaction, () => {
             this.popupUpdate('updateAppState', APP_STATE.SIGN_TRANSACTION)
-        }, (uuid,messageUUID,result) => {
-            this.tabResponse(uuid,messageUUID,result)
+        }, (uuid, messageUUID, result) => {
+            this.tabResponse(uuid, messageUUID, result)
         })
     }
 
     // POPUP REQUEST
     async getAppState(messageUUID) {
         const appState = await WalletService.getAppState()
-        this.popupResponse(messageUUID,appState)
+        this.popupResponse(messageUUID, appState)
     }
 
-    getSelectedCoin (messageUUID) {
+    getSelectedCoin(messageUUID) {
         this.popupResponse(messageUUID, WalletService.selectedCoinIndex)
     }
 
-    setAppState (messageUUID, appState) {
+    setAppState(messageUUID, appState) {
         this.popupUpdate('updateAppState', appState)
     }
 
-    getSetting (messageUUID) {
+    getSetting(messageUUID) {
         this.popupResponse(messageUUID, StorageService.setting)
     }
 
-    setSetting (messageUUID, data) {
+    setSetting(messageUUID, data) {
         StorageService.setting[data.property] = data.data
         StorageService.saveSetting()
 
-        if(data.property == 'network') {
+        if (data.property == 'networks') {
             WalletService.changeNetwork(data.data, async () => {
                 this.popupUpdate('updateAppState', await WalletService.getAppState())
             })
@@ -149,24 +150,22 @@ class BackgroundAPI extends EventEmitter {
         this.popupUpdate('updateSetting', StorageService.setting)
     }
 
-    async getAllAccountInfo (messageUUID) {
-        if(WalletService.accountInfo.length > 0)
-            this.popupResponse(messageUUID, WalletService.accountInfo)
-        else
-            this.popupResponse(messageUUID, await WalletService.getAllAccountInfo())
+    getSelectedAccount(messageUUID) {
+        this.popupResponse(messageUUID, StorageService.selectedAccount)
     }
 
-    setSelectedCoin (messageUUID, index) {
-        WalletService.selectedCoinIndex = index;
-        this.popupUpdate('updateSelectedCoin', WalletService.selectedCoinIndex)
+    setSelectedAccount(messageUUID, address) {
+        // WalletService.selectedCoinIndex = index;
+        var account = StorageService.accounts.find(x => x.address === address)
+        this.popupUpdate('updateSelectedAccount', account)
     }
 
-    async getTransactionHistories (messageUUID, accountInfo) {
+    async getTransactionHistories(messageUUID, accountInfo) {
         this.popupResponse(messageUUID, await WalletService.getTransactionHistories(accountInfo))
     }
 
     getTransactionQueue(messageUUID) {
-        if(!WalletService.transactionQueue) {
+        if (!WalletService.transactionQueue) {
             this.popupResponse(messageUUID, null)
         } else {
             this.popupResponse(messageUUID, WalletService.transactionQueue.transaction)
@@ -174,13 +173,13 @@ class BackgroundAPI extends EventEmitter {
     }
 
     async setPassword(messageUUID, password) {
-        if(await StorageService.dataExists()) this.popupResponse(messageUUID, {error: 'App already has password. You can\'t set password again'})
+        if (await StorageService.dataExists()) this.popupResponse(messageUUID, { error: 'App already has password. You can\'t set password again' })
         StorageService.init(password)
-        this.popupResponse(messageUUID, {success: true})
+        this.popupResponse(messageUUID, { success: true })
         this.popupUpdate('updateAppState', await WalletService.getAppState())
     }
 
-    async updateAfterUnlock (messageUUID) {
+    async updateAfterUnlock(messageUUID) {
         // set network
         WalletService.init()
         // update network
@@ -188,14 +187,15 @@ class BackgroundAPI extends EventEmitter {
 
         this.popupUpdate('updateAppState', await WalletService.getAppState())
         this.popupUpdate('updateSetting', StorageService.setting)
-        this.popupResponse(messageUUID, {success:true})
+        this.popupUpdate('updateAccounts', StorageService.accounts)
+        this.popupResponse(messageUUID, { success: true })
         this.tabUpdate('updateAddress', WalletService.getAddress())
 
         // solve connect queue
-        if(WalletService.popup) WalletService.closePopup()
-        if(this.connectQueue) {
-            if(this.connectQueue.type == 'empow') {
-                this.tabResponse(this.connectQueue.uuid,this.connectQueue.messageUUID,StorageService.selectedAccount.address)
+        if (WalletService.popup) WalletService.closePopup()
+        if (this.connectQueue) {
+            if (this.connectQueue.type == 'empow') {
+                this.tabResponse(this.connectQueue.uuid, this.connectQueue.messageUUID, StorageService.selectedAccount.address)
             }
 
             this.connectQueue = null
@@ -203,14 +203,11 @@ class BackgroundAPI extends EventEmitter {
 
         // update address for all blockchain services
         await WalletService.updateServiceAddress()
-        this.popupUpdate('updateAllAccountInfo', await WalletService.getAllAccountInfo())
 
         // start pool
-        WalletService.startPool( (index) => {
-            this.popupUpdate('updateAccountInfo', {
-                index,
-                accountInfo: WalletService.accountInfo[index]
-            })
+        WalletService.startPool(() => {
+            this.popupUpdate('updateSelectedAccount', StorageService.selectedAccount)
+            this.popupUpdate('updateAccounts', StorageService.accounts)
         })
 
         // update time to autolock
@@ -218,7 +215,7 @@ class BackgroundAPI extends EventEmitter {
     }
 
     unlock(messageUUID, password) {
-        StorageService.unlock(password).then( async () => {
+        StorageService.unlock(password).then(async () => {
             this.updateAfterUnlock(messageUUID)
         }).catch(error => {
             this.popupResponse(messageUUID, {
@@ -227,31 +224,41 @@ class BackgroundAPI extends EventEmitter {
         })
     }
 
-    async lock (messageUUID) {
+    async lock(messageUUID) {
         WalletService.lock()
         this.popupUpdate('updateAppState', await WalletService.getAppState())
     }
 
     async createNewWallet(messageUUID) {
-        this.popupResponse(messageUUID, {privateKey: WalletService.createNewWallet()})
+        this.popupResponse(messageUUID, { privateKey: WalletService.createNewWallet() })
     }
-    
-    async restoreWallet (messageUUID, privateKey) {
+
+    async restoreWallet(messageUUID, privateKey) {
         try {
             await WalletService.restoreWallet(privateKey)
             this.updateAfterUnlock(messageUUID)
         } catch (error) {
-            if(typeof error == 'object') error = error.message
+            if (typeof error == 'object') error = error.message
             this.popupResponse(messageUUID, {
                 error
             })
         }
     }
 
-    async send (messageUUID, data) {
+    async getAccounts(messageUUID) {
+        this.popupResponse(messageUUID,
+            StorageService.accounts
+        )
+    }
+
+    async setAccounts(messageUUID, accounts) {
+        WalletService.setAccounts(accounts)        
+    }
+
+    async send(messageUUID, data) {
         const result = await WalletService.send(data)
-        
-        if(result.error) {
+
+        if (result.error) {
             this.popupResponse(messageUUID, {
                 error: result.error
             })
@@ -272,61 +279,61 @@ class BackgroundAPI extends EventEmitter {
     //     }
     // }
 
-    checkPassword (messageUUID, password) {
-        if(StorageService.password != password) {
+    checkPassword(messageUUID, password) {
+        if (StorageService.password != password) {
             this.popupResponse(messageUUID, {
                 error: 'Password not correct'
             })
         } else {
-            this.popupResponse(messageUUID, {success: true})
+            this.popupResponse(messageUUID, { success: true })
         }
     }
 
-    changePassword (messageUUID, password) {
+    changePassword(messageUUID, password) {
         StorageService.password = password
         StorageService.saveAll()
         this.lock()
     }
 
-    async buyRamEM (messageUUID, bytes) {
+    async buyRamEM(messageUUID, bytes) {
         try {
             var data = await WalletService.buyRamEM(bytes)
             this.popupResponse(messageUUID, data)
         } catch (error) {
-            this.popupResponse(messageUUID,{
+            this.popupResponse(messageUUID, {
                 error: error.message ? error.message : error
             })
         }
     }
 
-    async sellRamEM (messageUUID, bytes) {
+    async sellRamEM(messageUUID, bytes) {
         try {
             var data = await WalletService.sellRamEM(bytes)
             this.popupResponse(messageUUID, data)
         } catch (error) {
-            this.popupResponse(messageUUID,{
+            this.popupResponse(messageUUID, {
                 error: error.message ? error.message : error
             })
         }
     }
 
-    async pledge (messageUUID, amount) {
+    async pledge(messageUUID, amount) {
         try {
             var data = await WalletService.pledge(amount)
             this.popupResponse(messageUUID, data)
         } catch (error) {
-            this.popupResponse(messageUUID,{
+            this.popupResponse(messageUUID, {
                 error: error.message ? error.message : error
             })
         }
     }
 
-    async unpledge (messageUUID, amount) {
+    async unpledge(messageUUID, amount) {
         try {
             var data = await WalletService.unpledge(amount)
             this.popupResponse(messageUUID, data)
         } catch (error) {
-            this.popupResponse(messageUUID,{
+            this.popupResponse(messageUUID, {
                 error: error.message ? error.message : error
             })
         }
@@ -334,7 +341,7 @@ class BackgroundAPI extends EventEmitter {
 
     async acceptTransaction(messageUUID, timeExpired) {
 
-        if(timeExpired && timeExpired != 0) {
+        if (timeExpired && timeExpired != 0) {
             StorageService.addWhitelist(WalletService.transactionQueue.transaction.contractAddress, timeExpired)
         }
 
@@ -342,13 +349,14 @@ class BackgroundAPI extends EventEmitter {
     }
 
     rejectTransaction() {
-        WalletService.rejectTransaction( async (uuid, messageUUID) => {
+        WalletService.rejectTransaction(async (uuid, messageUUID) => {
             this.tabResponse(uuid, messageUUID, {
                 error: 'Transaction reject by user'
             })
             this.popupUpdate('updateAppState', await WalletService.getAppState())
         })
     }
+
 }
 
 export default BackgroundAPI

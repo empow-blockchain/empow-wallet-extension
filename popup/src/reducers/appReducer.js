@@ -3,17 +3,16 @@ import {createReducer,createAction} from 'redux-starter-kit'
 
 export const setAppState = createAction('setAppState')
 export const setTransactionQueue = createAction('setTransactionQueue')
-export const setAllAccountInfo = createAction('setAllAccountInfo')
-export const setAccountInfo = createAction('setAccountInfo')
-export const setSelectedCoin = createAction('setSelectedCoin')
+export const setSelectedAccount = createAction('setSelectedAccount')
 export const setSetting = createAction('setSetting')
+export const setAccounts = createAction('setAccounts')
 
 export const appReducer = createReducer({
     appState: APP_STATE.UNINITIALISED,
     transactionQueue: null,
-    allAccountInfo: [],
-    selectedCoin: false,
+    selectedAccount: false,
     setting: false,
+    accounts: []
 }, {
     [ setAppState ]: (state, { payload }) => {
         state.appState = payload;
@@ -21,16 +20,13 @@ export const appReducer = createReducer({
     [ setTransactionQueue ] : (state, {payload}) => {
         state.transactionQueue = payload
     },
-    [ setAllAccountInfo ]: (state, {payload}) => {
-        state.allAccountInfo = payload
-    },
-    [ setAccountInfo ]: (state, {payload}) => {
-        state.allAccountInfo[payload.index] = payload.accountInfo
-    },
-    [ setSelectedCoin ]: (state, {payload}) => {
-        state.selectedCoin = payload
+    [ setSelectedAccount ]: (state, {payload}) => {
+        state.selectedAccount = payload
     },
     [ setSetting ]: (state, {payload}) => {
         state.setting = payload
+    },
+    [ setAccounts ]: (state, {payload}) => {
+        state.accounts = payload
     }
 });

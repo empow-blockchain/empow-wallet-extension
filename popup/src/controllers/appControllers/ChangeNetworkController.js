@@ -53,7 +53,7 @@ class ChangeNetworkController extends Component {
                                 </div>
                                 <div className="content">
                                     <p style={{ textTransform: 'capitalize' }}>{value.name.toLowerCase()}</p>
-                                    <p>url</p>
+                                    <p>{value.url}</p>
                                 </div>
                                 <label className="checkbox" style={{float: 'right'}}>
                                     <input type="radio" name="radio" checked={value.selected} />

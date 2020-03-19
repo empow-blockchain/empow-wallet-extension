@@ -12,10 +12,9 @@ import PopupAPI from 'popup/PopupAPI'
 import {
     setAppState,
     setTransactionQueue,
-    setAllAccountInfo,
-    setAccountInfo,
-    setSelectedCoin,
-    setSetting
+    setSelectedAccount,
+    setSetting,
+    setAccounts
 } from './reducers/appReducer'
 
 import { APP_STATE } from '../../constants';
@@ -58,11 +57,11 @@ const popup = {
             let setting = await PopupAPI.getSetting()
             this.store.dispatch(setSetting(setting))
 
-            let allAccountInfo = await PopupAPI.getAllAccountInfo()
-            this.store.dispatch(setAllAccountInfo(allAccountInfo))
+            let selectedAccount = await PopupAPI.getSelectedAccount()
+            this.store.dispatch(setSelectedAccount(selectedAccount))
 
-            let selectedCoin = await PopupAPI.getSelectedCoin ()
-            this.store.dispatch(setSelectedCoin(selectedCoin))
+            let accounts = await PopupAPI.getAccounts()
+            this.store.dispatch(setAccounts(accounts))
         }
 
         if(appState == APP_STATE.SIGN_TRANSACTION) {
@@ -82,20 +81,16 @@ const popup = {
             this.store.dispatch(setTransactionQueue(transaction))
         ))
 
-        this.requestHandle.on('updateAllAccountInfo', accountInfo => (
-            this.store.dispatch(setAllAccountInfo(accountInfo))
-        ))
-
-        this.requestHandle.on('updateAccountInfo', accountInfo => {
-            this.store.dispatch(setAccountInfo(accountInfo))
-        })
-
-        this.requestHandle.on('updateSelectedCoin', index => (
-            this.store.dispatch(setSelectedCoin(index))
+        this.requestHandle.on('updateSelectedAccount', selectedAccount => (
+            this.store.dispatch(setSelectedAccount(selectedAccount))
         ))
 
         this.requestHandle.on('updateSetting', setting => {
             this.store.dispatch(setSetting(setting))
+        })
+
+        this.requestHandle.on('updateAccounts', accounts => {
+            this.store.dispatch(setAccounts(accounts))
         })
     },
 

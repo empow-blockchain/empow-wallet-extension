@@ -66,9 +66,15 @@ const WalletService = {
     },
 
     restoreWallet(privateKey) {
+        var exist = StorageService.accounts.find(x => x.privateKey === privateKey)
+        if (exist) {
+            StorageService.saveSelectedAccount(exist)
+            return
+        }
+
         const wallet = EmpowService.restoreWallet(privateKey)
-        StorageService.saveAccounts([{ address: wallet.address, publicKey: wallet.publicKey, privateKey: wallet.privateKey }])
-        StorageService.saveSelectedAccount({ address: wallet.address, publicKey: wallet.publicKey, privateKey: wallet.privateKey })
+        StorageService.saveAccount({ address: wallet.address, publicKey: wallet.publicKey, privateKey: wallet.privateKey, balance: 0 })
+        StorageService.saveSelectedAccount({ address: wallet.address, publicKey: wallet.publicKey, privateKey: wallet.privateKey, balance: 0 })
     },
 
     async updateServiceAddress() {
@@ -84,42 +90,43 @@ const WalletService = {
         return []
     },
 
-    async getAllCoinInfo() {
-        this.accountInfo[0] = {
-            name: 'EMPOW',
-            symbol: 'EM',
-            type: 'coin',
-            address: StorageService.selectedAccount.address,
-            balance: 0,
-            marketData: { usd: 0, eur: 0, egp: 0, jpy: 0, usd_24h_change: 0.01 },
-            publicKey: StorageService.selectedAccount.publicKey ? StorageService.selectedAccount.publicKey : null,
-            privateKey: StorageService.selectedAccount.privateKey,
-            order: 0,
-            memo: true,
+    async getAccountInfo(callback) {
+        var accounts = StorageService.accounts || []
+        for (let i = 0; i < accounts.length; i++) {
+            const info = await EmpowService.getBalanceAndUsername(accounts[i].address)
+            StorageService.accounts[i].balance = info.balance;
+            StorageService.accounts[i].username = info.username;
         }
-        return this.accountInfo
+
+        const data = await EmpowService.getAccountInfo()
+        StorageService.selectedAccount = Object.assign(StorageService.selectedAccount, data)
+
+        console.log("abc")
+
+        callback()
     },
 
-    async getAllAccountInfo() {
-        this.getAllCoinInfo()
-        return this.accountInfo
-    },
+    setAccounts (accounts) {
+        console.log("1")
+        if (!accounts.find(x => x.address === StorageService.selectedAccount.address)) {
+            StorageService.selectedAccount = accounts[0]
+            
+        }
+        StorageService.accounts = accounts
+        StorageService.saveAccounts()
 
-    async getCoinBalance(callback) {
-        const info = await EmpowService.getAccountInfo()
-        this.accountInfo[0] = Object.assign(this.accountInfo[0], info)
-        callback(0)
+        this.getAccountInfo(this.updateBalanceCallback)
     },
 
     startPool(callback) {
         this.updateBalanceCallback = callback
         console.log("START POOLING")
 
-        this.getCoinBalance(callback)
+        this.getAccountInfo(callback)
 
         this.pool = setInterval(() => {
             this.lastOpenPopupTime = new Date().getTime()
-            this.getCoinBalance(callback)
+            this.getAccountInfo(callback)
         }, 10000)
     },
 

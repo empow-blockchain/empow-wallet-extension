@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import ArrowLeft from '../../assets/images/arrow-left.svg'
 import IconEmpty from '../../assets/images/icon-empty.svg'
-import ButtonCopy from '../../components/ButtonCopy';
 import PopupAPI from '../../PopupAPI';
 import Utils from 'lib/utils'
-import CoinIcon from '../../components/CoinIcon'
-import { TX_API, CURRENCY_SYMBOL } from 'constants/index'
+import { TX_API, APP_STATE } from 'constants/index'
 
 class CoinDetailController extends Component {
 
@@ -29,7 +27,7 @@ class CoinDetailController extends Component {
     }
 
     onClickBack = () => {
-        PopupAPI.setSelectedCoin(false)
+        PopupAPI.setAppState(APP_STATE.READY)
     }
 
     renderListTransactions() {
@@ -49,14 +47,6 @@ class CoinDetailController extends Component {
                     listTransaction.push(histories[i])
                 }
             }
-        }
-
-        let txURL = ''
-
-        if (accountInfo.type == 'coin') {
-            txURL = TX_API[accountInfo.name.toUpperCase()]
-        } else {
-            txURL = TX_API[accountInfo.type.toUpperCase()]
         }
 
         return (
@@ -84,7 +74,7 @@ class CoinDetailController extends Component {
                 {histories.length > 0 && <ul className="scroll">
                     {listTransaction.map((value, index) => {
                         return (<li key={index}>
-                            <a href={txURL + value.txid} target="_blank" className="content">
+                            <a href={TX_API + value.txid} target="_blank" className="content">
                                 <p>{value.address.length > 24 ? value.address.substring(0, 24) + '...' : value.address}</p>
                                 <p className="time">{typeof value.time == 'number' ? Utils.formatTime(value.time) : value.time}</p>
                             </a>
@@ -103,13 +93,6 @@ class CoinDetailController extends Component {
 
     render() {
         if (!this.props.accountInfo) return this.onClickBack()
-        const { accountInfo, setting } = this.props
-        if (accountInfo.customToken || accountInfo.type == 'BEP2') {
-            accountInfo.logo = `logo_${accountInfo.type.toLowerCase()}`
-        } else {
-            accountInfo.logo = `logo_${accountInfo.symbol.toLowerCase()}`
-        }
-
         return (
             <div className="right-panel bg-general" id="coin-detail">
                 <div>

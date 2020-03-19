@@ -29,14 +29,12 @@ class HomeController extends Component {
 
         this.state = {
             loading: true,
-            totalBalance: 0,
-            totalBalanceBtc: 0,
             route: null,
             showRamEM: false,
             showGas: false,
             defaultMenuStake: 1,
             defaultMenuRam: 1,
-            avaiableEos: props.accountInfo[0].balance,
+            avaiableEos: props.accountInfo.balance || 0,
             reclaimingEOS: 0,
             buyRamValue: 0,
             sellRamValue: 0,
@@ -53,52 +51,30 @@ class HomeController extends Component {
             sendMemo: '',
             stakeNetValue: 0,
             unstakeNetValue: 0,
-            showSwitchWallet: false
+            showSwitchWallet: false,
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const { accountInfo } = this.props
-        if (!accountInfo || accountInfo.length == 0) return;
-        this.calcTotalBalance(accountInfo)
+        console.log(accountInfo)
+        if (!accountInfo) return;
         this.setState({
-            loading: false
+            loading: false,
         })
     }
 
     componentDidUpdate(prevProps) {
         if (equal(this.props, prevProps)) return;
         const { accountInfo } = this.props
-        if (!accountInfo || accountInfo.length == 0) return;
-        this.calcTotalBalance(accountInfo)
+        if (!accountInfo) return;
         this.setState({
-            loading: false
+            loading: false,
         })
     }
 
-    calcTotalBalance(accountInfo) {
-
-        let totalBalance = 0;
-        let totalBalanceBtc = 0;
-
-        accountInfo.map(value => {
-            if (value && value.balance && typeof value.marketData[this.props.setting.currency] == 'number') {
-                const balance = parseFloat(value.balance)
-                totalBalance += parseFloat(balance * value.marketData[this.props.setting.currency])
-            }
-        })
-
-        if (accountInfo[0] && accountInfo[0].marketData)
-            totalBalanceBtc = parseFloat(totalBalance / accountInfo[0].marketData[this.props.setting.currency])
-
-        this.setState({
-            totalBalance: totalBalance.toFixed(2),
-            totalBalanceBtc: totalBalanceBtc.toFixed(8)
-        })
-    }
-
-    onClickCoin(index) {
-        PopupAPI.setSelectedCoin(index)
+    onClickCoin() {
+        PopupAPI.setAppState(APP_STATE.COIN_DETAIL)
     }
 
     showSetting = () => {
@@ -115,6 +91,30 @@ class HomeController extends Component {
         })
     }
 
+    onClickImportWallet = () => {
+        PopupAPI.setAppState(APP_STATE.RESTORING)
+    }
+
+    onClickCreateWallet = () => {
+        PopupAPI.setAppState(APP_STATE.CREATING)
+    }
+
+    onChangeAccount = (address) => {
+        PopupAPI.setSelectedAccount(address)
+        this.setState({
+            showSwitchWallet: !this.state.showSwitchWallet
+        })
+    }
+
+    onDeleteAccount = (address) => {
+        const { accounts } = this.props
+        if (accounts.length === 1) {
+            return;
+        }
+        var newAccounts = accounts.filter(x => x.address !== address)
+        PopupAPI.setAccounts(newAccounts)
+    }
+
     selectMenuStake = (index) => {
         this.setState({
             defaultMenuStake: index
@@ -128,7 +128,7 @@ class HomeController extends Component {
     }
 
     onChangeBuyRam = (buyRamValue) => {
-        const { ramPrice, balance } = this.props.accountInfo[0]
+        const { ramPrice, balance } = this.props.accountInfo
         let avaiableEos = balance - (buyRamValue * ramPrice)
 
         avaiableEos = avaiableEos.toFixed(2)
@@ -162,7 +162,7 @@ class HomeController extends Component {
 
     onChangeSellRam = (sellRamValue) => {
 
-        const { ramPrice } = this.props.accountInfo[0]
+        const { ramPrice } = this.props.accountInfo
         let reclaimingEOS = sellRamValue * ramPrice
 
         reclaimingEOS = reclaimingEOS.toFixed(2)
@@ -195,7 +195,7 @@ class HomeController extends Component {
     }
 
     onChangeStake = (stakeCpuValue, stakeNetValue) => {
-        const { balance } = this.props.accountInfo[0]
+        const { balance } = this.props.accountInfo
 
         let avaiableEos = balance - (stakeCpuValue + stakeNetValue)
         avaiableEos = avaiableEos.toFixed(2)
@@ -208,7 +208,7 @@ class HomeController extends Component {
     }
 
     onChangePledge = (stakeCpuValue) => {
-        const { balance } = this.props.accountInfo[0]
+        const { balance } = this.props.accountInfo
 
         if (stakeCpuValue === '') {
             this.setState({
@@ -308,7 +308,7 @@ class HomeController extends Component {
     }
 
     onSend = () => {
-        const accountInfo = this.props.accountInfo[0]
+        const accountInfo = this.props.accountInfo
         const { sendTo, sendAmount, sendMemo } = this.state
 
         this.setState({
@@ -332,49 +332,30 @@ class HomeController extends Component {
 
     renderListCoin() {
 
-        const { setting } = this.props
+        var { setting, accountInfo } = this.props
+        accountInfo = accountInfo || {}
 
         return (
             <ul className="scroll" style={{ marginTop: '20px' }}>
-                {this.props.accountInfo.map((value, index) => {
-
-                    if (!value) return;
-                    if (!setting.showZeroBalance && (value.balance == 0 || !value.balance)) return;
-                    if (setting.listCoinDisabled.hasOwnProperty(value.symbol.toLowerCase()) && setting.listCoinDisabled[value.symbol.toLowerCase()]) return;
-
-                    if (value.customToken || value.type == 'BEP2') {
-                        value.logo = `logo_${value.type.toLowerCase()}`
-                    } else {
-                        value.logo = `logo_${value.symbol.toLowerCase()}`
-                    }
-
-                    return (
-                        <li key={index} onClick={() => this.onClickCoin(index)}>
-                            <div className="logo-token">
-                                <img src={CoinIcon[value.logo]}></img>
-                            </div>
-                            <div className="content" style={{ width: '70px' }}>
-                                {value.temp_name ? <p>{value.temp_name}</p> : <p>{value.name.length <= 8 ? value.name : value.name.substring(0, 8) + '...'}</p>}
-                                <p>{value.symbol}</p>
-                            </div>
-                            {value.balance ?
-                                <div className="content" style={{ width: '90px' }}>
-                                    <p>{Utils.formatCurrency(value.balance)} {value.symbol}</p>
-                                    {value.marketData && <p>{CURRENCY_SYMBOL[setting.currency.toUpperCase()]} {parseFloat(value.balance * value.marketData[setting.currency]).toFixed(2).toString()}</p>}
-                                </div>
-                                :
-                                <div className="content" style={{ width: '90px' }}>
-                                    <p>0 {value.symbol}</p>
-                                    <p>{CURRENCY_SYMBOL[setting.currency.toUpperCase()]} 0</p>
-                                </div>
-                            }
-                            <div className="chart">
-                                <img src={value.marketData.usd_24h_change > 0 ? IconIncrease : IconReduction}></img>
-                                <p>{`${value.marketData.usd_24h_change.toFixed(2)}%`}</p>
-                            </div>
-                        </li>
-                    )
-                })}
+                <li onClick={() => this.onClickCoin()}>
+                    <div className="logo-token">
+                        <img src={CoinIcon['logo_em']}></img>
+                    </div>
+                    <div className="content" style={{ width: '70px' }}>
+                        <p>EMPOW</p>
+                        <p>EM</p>
+                    </div>
+                    <div className="content" style={{ width: '90px' }}>
+                        <p style={{ color: 'white' }}>{Utils.formatCurrency(accountInfo.balance)} EM</p>
+                        {/* {value.marketData && <p>{CURRENCY_SYMBOL[setting.currency.toUpperCase()]} {parseFloat(value.balance * value.marketData[setting.currency]).toFixed(2).toString()}</p>} */}
+                    </div>
+                    <div className="chart">
+                        {/* <img src={value.marketData.usd_24h_change > 0 ? IconIncrease : IconReduction}></img>
+                        <p>{`${value.marketData.usd_24h_change.toFixed(2)}%`}</p> */}
+                        <img src={IconIncrease}></img>
+                        <p>{`0.01 %`}</p>
+                    </div>
+                </li>
             </ul>
         )
     }
@@ -393,7 +374,7 @@ class HomeController extends Component {
     renderRam() {
         var show = 'showRamEM';
         const { avaiableEos, buyRamValue, sellRamValue, defaultMenuRam, reclaimingEOS, sendLoading, sendError } = this.state
-        const { ramPrice, balance, ramLimit, ramUsed } = this.props.accountInfo[0]
+        const { ramPrice, balance, ramLimit, ramUsed } = this.props.accountInfo || {}
 
         const maxBuy = balance / ramPrice
         const maxSell = ramLimit - ramUsed
@@ -588,19 +569,12 @@ class HomeController extends Component {
     }
 
     renderTransactionSuccess() {
-
-        const { accountInfo } = this.props
         const { sendSuccess } = this.state
 
         let txURL = ''
+        txURL = TX_API + sendSuccess
 
-        if (accountInfo[0].type == 'coin') {
-            txURL = TX_API[accountInfo[0].name.toUpperCase()] + sendSuccess
-        } else {
-            txURL = TX_API[accountInfo[0].type.toUpperCase()] + sendSuccess
-        }
-
-        if (sendSuccess == 'SenSend Transaction successfully') txURL = '#'
+        if (sendSuccess == 'Send Transaction successfully') txURL = '#'
 
         return (
             <div className="overlay">
@@ -620,7 +594,7 @@ class HomeController extends Component {
     }
 
     renderReceive() {
-        const accountInfo = this.props.accountInfo[0]
+        const { accountInfo } = this.props
 
         return (
             <div className="overlay">
@@ -650,7 +624,7 @@ class HomeController extends Component {
     }
 
     renderSend() {
-        const accountInfo = this.props.accountInfo[0]
+        const { accountInfo } = this.props
 
         return (
             <div className="overlay">
@@ -689,45 +663,29 @@ class HomeController extends Component {
     }
 
     renderListWallet() {
+        const { accounts } = this.props
         return (
             <div className="overlay">
                 <ul className="list-wallet">
-                    <li>
-                        <div className="left">
-                            <p className="label">My Wallet</p>
-                            <p className="address">EM2ZsN1rxJs8pz53WDs...</p>
-                        </div>
-                        <div className="right">
-                            <p className="balance">150.34 EM</p>
-                            <div className="delete"><img src={DeleteIcon}></img></div>
-                        </div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <p className="label">My Wallet</p>
-                            <p className="address">EM2ZsN1rxJs8pz53WDs...</p>
-                        </div>
-                        <div className="right">
-                            <p className="balance">150.34 EM</p>
-                            <div className="delete"><img src={DeleteIcon}></img></div>
-                        </div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <p className="label">My Wallet</p>
-                            <p className="address">EM2ZsN1rxJs8pz53WDs...</p>
-                        </div>
-                        <div className="right">
-                            <p className="balance">150.34 EM</p>
-                            <div className="delete"><img src={DeleteIcon}></img></div>
-                        </div>
-                    </li>
+                    {accounts.map((account, index) => {
+                        return <li onClick={() => this.onChangeAccount(account.address)}>
+                            <div className="left">
+                                <p className="label">{account.username ? account.username : `Wallet ${index + 1}`}</p>
+                                <p className="address">{account.address.substring(0, 15) + '...'}</p>
+                            </div>
+                            <div className="right">
+                                <p className="balance">{Utils.formatCurrency(account.balance, 2)} EM</p>
+                                <div onClick={() => this.onDeleteAccount(account.address)} className="delete"><img src={DeleteIcon}></img></div>
+                            </div>
+                        </li>
+                    })}
+
                     <li className="import-wallet">
-                        <div>
+                        <div onClick={() => this.onClickCreateWallet()}>
                             <img className="img-circle" src={CreateIcon}></img>
                             <p className="create">Create Wallet</p>
                         </div>
-                        <div>
+                        <div onClick={() => this.onClickImportWallet()}>
                             <p className="import">Import Wallet</p>
                             <img className="img-circle" src={RestoreIcon}></img>
                         </div>
@@ -740,8 +698,8 @@ class HomeController extends Component {
     renderContent() {
 
         const { showSwitchWallet } = this.state
-        const { setting } = this.props
-        const accountInfo = this.props.accountInfo[0]
+        var { setting, accountInfo } = this.props
+        accountInfo = accountInfo || {}
         let gasPercent = (accountInfo.gasLimit - accountInfo.gasUsed) / accountInfo.gasLimit * 100
         let ramEMPercent = (accountInfo.ramLimit - accountInfo.ramUsed) / accountInfo.ramLimit * 100
 
@@ -751,20 +709,20 @@ class HomeController extends Component {
                     <div className="header">
                         <img onClick={() => this.showSearch()} src={IconSearch} className="btn-search"></img>
 
-                        <div className="switch-wallet" onClick={() => this.setState({showSwitchWallet: !showSwitchWallet})}>
+                        <div className="switch-wallet" onClick={() => this.setState({ showSwitchWallet: !showSwitchWallet })}>
                             <p className="title">Switch Wallet <img className="arrow-down" src={ArrowDown}></img></p>
                         </div>
 
                         {showSwitchWallet && this.renderListWallet()}
 
                         <div className="header-right">
-                            <img style={{cursor: "pointer"}} onClick={() => this.showSetting()} src={IconSetting}></img>
+                            <img style={{ cursor: "pointer" }} onClick={() => this.showSetting()} src={IconSetting}></img>
                         </div>
                     </div>
                     <div className="titler">
-                        <p className="balance">{Utils.formatCurrency(accountInfo.balance, 2)} {accountInfo.symbol}</p>
+                        <p className="balance">{Utils.formatCurrency(accountInfo.balance, 2)} EM</p>
                         {/* <p>{CURRENCY_SYMBOL[setting.currency.toUpperCase()]} {parseFloat(accountInfo.balance * accountInfo.marketData[setting.currency]).toFixed(2).toString()}</p> */}
-                        <p style={{ fontSize: '14px', marginTop: 10 }}>Selected Username</p>
+                        <p style={{ fontSize: '14px', marginTop: 10 }}>{accountInfo.username}</p>
                         <p style={{ fontSize: '10px' }}>{accountInfo.address}</p>
                         {/* <div className="copy-with-text">
                             <ButtonCopy copyText={accountInfo.address} />

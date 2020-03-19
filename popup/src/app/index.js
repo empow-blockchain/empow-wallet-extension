@@ -22,7 +22,7 @@ class App extends React.Component {
         $("body").width(width)
     }
 
-    componentDidMount () {
+    componentDidMount() {
         autosize(document.querySelectorAll('textarea'));
     }
 
@@ -32,38 +32,43 @@ class App extends React.Component {
             transactionQueue,
             allAccountInfo,
             selectedCoin,
-            setting
+            setting,
+            accounts,
+            selectedAccount
         } = this.props;
 
         let dom = null;
 
-        switch(appState) {
+        switch (appState) {
             case APP_STATE.UNINITIALISED:
-                dom = <RegisterController/>;
+                dom = <RegisterController />;
                 break;
             case APP_STATE.PASSWORD_SET:
-                dom = <UnlockController/>;
+                dom = <UnlockController />;
                 break;
             case APP_STATE.UNLOCKED:
-                dom = <CreateWalletController/>;
+                dom = <CreateWalletController />;
                 break;
             case APP_STATE.CREATING:
-                dom = <CreateNewWalletController/>;
+                dom = <CreateNewWalletController />;
                 break;
             case APP_STATE.RESTORING:
-                dom = <RestoreWalletController/>;
+                dom = <RestoreWalletController />;
                 break;
             case APP_STATE.READY:
-                dom = typeof selectedCoin != 'number' ? <HomeController accountInfo={allAccountInfo} setting={setting}/> : <CoinDetailController accountInfo={allAccountInfo[selectedCoin]} setting={setting}/>;
+                dom = <HomeController accounts={accounts} accountInfo={selectedAccount} setting={setting} />
+                break;
+            case APP_STATE.COIN_DETAIL:
+                dom = <CoinDetailController accountInfo={selectedAccount}/>
                 break;
             case APP_STATE.SEARCH:
-                dom = <SearchController accountInfo={allAccountInfo} setting={setting}/>
+                dom = <SearchController accountInfo={allAccountInfo} setting={setting} />
                 break;
             case APP_STATE.SETTING:
-                dom = <SettingController accountInfo={allAccountInfo} setting={setting}/>
+                dom = <SettingController accountInfo={allAccountInfo} setting={setting} />
                 break;
             case APP_STATE.SIGN_TRANSACTION:
-                dom = <SignTransactionController transaction={transactionQueue}/>;
+                dom = <SignTransactionController transaction={transactionQueue} />;
                 break;
             default:
                 dom = <div>Can not get APP_STATE</div>;
@@ -78,7 +83,7 @@ class App extends React.Component {
 export default connect(state => ({
     appState: state.app.appState,
     transactionQueue: state.app.transactionQueue,
-    allAccountInfo: state.app.allAccountInfo,
-    selectedCoin: state.app.selectedCoin,
+    selectedAccount: state.app.selectedAccount,
     setting: state.app.setting,
+    accounts: state.app.accounts
 }))(App);

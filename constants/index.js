@@ -7,6 +7,7 @@ export const APP_STATE = {
     READY: 5,
     SEARCH: 6,
     SETTING: 7,
+    COIN_DETAIL: 8,
     SIGN_TRANSACTION: 10,
 }
 

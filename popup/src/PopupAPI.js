@@ -34,21 +34,27 @@ const PopupAPI = {
             this.handle.send('Request', 'restoreWallet', privateKey, resolve, reject)
         ))
     },
-    getAllAccountInfo () {
+    getAccounts () {
         return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'getAllAccountInfo', null, resolve, reject)
+            this.handle.send('Request', 'getAccounts', null, resolve, reject)
         ))
     },
-    getSelectedCoin () {
+    setAccounts (accounts) {
         return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'getSelectedCoin', null, resolve, reject)
+            this.handle.send('Request', 'setAccounts', accounts, resolve, reject)
         ))
     },
-    setSelectedCoin (index) {
+    getSelectedAccount () {
         return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'setSelectedCoin', index, resolve, reject)
+            this.handle.send('Request', 'getSelectedAccount', null, resolve, reject)
         ))
     },
+    setSelectedAccount (address) {
+        return new Promise((resolve,reject) => (
+            this.handle.send('Request', 'setSelectedAccount', address, resolve, reject)
+        ))
+    },
+    
     getTransactionHistories (coinName) {
         return new Promise((resolve,reject) => (
             this.handle.send('Request', 'getTransactionHistories', coinName, resolve, reject)
@@ -67,17 +73,6 @@ const PopupAPI = {
     send (coinInfo, to, value, memo) {
         return new Promise((resolve,reject) => (
             this.handle.send('Request', 'send', { coinInfo,to,value,memo }, resolve, reject)
-        ))
-    },
-    createIostAccount (payment, name) {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'createIostAccount', {payment, name}, resolve, reject)
-        ))
-    },
-
-    toggleLeftPanel () {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'toggleLeftPanel', null, resolve, reject)
         ))
     },
     getSetting () {
@@ -135,52 +130,7 @@ const PopupAPI = {
         return new Promise((resolve,reject) => (
             this.handle.send('Request', 'rejectTransaction', null, resolve, reject)
         ))
-    },
-    getLeftPanelState() {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'getLeftPanelState', null, resolve, reject)
-        ))
-    },
-    setLeftPanelState (leftPanelState) {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'setLeftPanelState', leftPanelState, resolve, reject)
-        ))
-    },
-    register (email,password) {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'register', {email,password}, resolve, reject)
-        ))
-    },
-    login(email, password){
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'login', { email,password }, resolve, reject)
-        ))
-    },
-    logout() {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'logout', null, resolve, reject)
-        )) 
-    },
-    forgot (email) {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'forgot', email, resolve, reject)
-        )) 
-    },
-    leftChangePassword (oldPassword, newPassword) {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'leftChangePassword', {oldPassword, newPassword}, resolve, reject)
-        )) 
-    },
-    getLeftAccountInfo () {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'getLeftAccountInfo', null, resolve, reject)
-        )) 
-    },
-    spin (type) {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'spin', type, resolve, reject)
-        ))
-    },
+    }
 }
 
 export default PopupAPI
