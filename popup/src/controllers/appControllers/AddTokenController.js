@@ -102,8 +102,6 @@ class AddTokenController extends Component {
                     </div>
                     <Button isLoading={this.state.loading} onClick={this.onSave}>Save</Button>
                 </div>
-
-
             </div>
         );
     }

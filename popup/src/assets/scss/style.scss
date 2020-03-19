@@ -1384,7 +1384,7 @@ textarea {
 #change-network {
     .menu-general-2 {
         margin-top: 15px;
-        margin-bottom: 50px;
+        margin-bottom: 10px;
         .content {
             width: 150px;
         }
@@ -1399,6 +1399,16 @@ textarea {
 
         .checkbox input {
             display: none;
+        }
+    }
+
+    .add-node {
+        margin-bottom: 30px;
+        cursor: pointer;
+        p {
+            display: inline-block;
+            vertical-align: 10px;
+            margin-left: 10px;
         }
     }
 }

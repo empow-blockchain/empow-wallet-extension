@@ -69,17 +69,6 @@ const PopupAPI = {
             this.handle.send('Request', 'send', { coinInfo,to,value,memo }, resolve, reject)
         ))
     },
-    createIostAccount (payment, name) {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'createIostAccount', {payment, name}, resolve, reject)
-        ))
-    },
-
-    toggleLeftPanel () {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'toggleLeftPanel', null, resolve, reject)
-        ))
-    },
     getSetting () {
         return new Promise((resolve,reject) => (
             this.handle.send('Request', 'getSetting', null, resolve, reject)
@@ -105,7 +94,6 @@ const PopupAPI = {
             this.handle.send('Request', 'changePassword', password, resolve, reject)
         ))
     },
-   
     buyRamEM (bytes) {
         return new Promise((resolve,reject) => (
             this.handle.send('Request', 'buyRamEM', bytes, resolve, reject)
@@ -134,51 +122,6 @@ const PopupAPI = {
     rejectTransaction() {
         return new Promise((resolve,reject) => (
             this.handle.send('Request', 'rejectTransaction', null, resolve, reject)
-        ))
-    },
-    getLeftPanelState() {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'getLeftPanelState', null, resolve, reject)
-        ))
-    },
-    setLeftPanelState (leftPanelState) {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'setLeftPanelState', leftPanelState, resolve, reject)
-        ))
-    },
-    register (email,password) {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'register', {email,password}, resolve, reject)
-        ))
-    },
-    login(email, password){
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'login', { email,password }, resolve, reject)
-        ))
-    },
-    logout() {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'logout', null, resolve, reject)
-        )) 
-    },
-    forgot (email) {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'forgot', email, resolve, reject)
-        )) 
-    },
-    leftChangePassword (oldPassword, newPassword) {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'leftChangePassword', {oldPassword, newPassword}, resolve, reject)
-        )) 
-    },
-    getLeftAccountInfo () {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'getLeftAccountInfo', null, resolve, reject)
-        )) 
-    },
-    spin (type) {
-        return new Promise((resolve,reject) => (
-            this.handle.send('Request', 'spin', type, resolve, reject)
         ))
     },
 }
