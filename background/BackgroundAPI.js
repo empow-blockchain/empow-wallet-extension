@@ -174,13 +174,14 @@ class BackgroundAPI extends EventEmitter {
     }
 
     setSelectedAccount(messageUUID, address) {
-        // WalletService.selectedCoinIndex = index;
         var account = StorageService.accounts.find(x => x.address === address)
+        StorageService.selectedAccount = account
+        StorageService.saveSelectedAccount()
         this.popupUpdate('updateSelectedAccount', account)
     }
 
-    async getTransactionHistories(messageUUID, accountInfo) {
-        this.popupResponse(messageUUID, await WalletService.getTransactionHistories(accountInfo))
+    async getTransactionHistories(messageUUID, address) {
+        this.popupResponse(messageUUID, await WalletService.getTransactionHistories(address))
     }
 
     getTransactionQueue(messageUUID) {

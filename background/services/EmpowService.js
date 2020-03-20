@@ -108,7 +108,7 @@ const EmpowService = {
         }
     },
 
-    async getAccountInfo(address) {
+    async getAccountInfo() {
         try {
             const result = await this.rpc.blockchain.getAccountInfo(this.address)
             const username = await this.rpc.blockchain.getContractStorage("auth.empow", `s_${this.address}`, "", true)
@@ -190,11 +190,11 @@ const EmpowService = {
         }
     },
 
-    getTransactionHistories() {
+    getTransactionHistories(address) {
 
         return new Promise(async (resolve, reject) => {
             try {
-                const res = await Axios.get(`${this.apiURL}/getAddressTransfer/${this.address}`)
+                const res = await Axios.get(`${this.apiURL}/getAddressTransfer/${address}`)
                 const txnList = res.data
                 let result = []
                 let count = 0;
@@ -203,9 +203,9 @@ const EmpowService = {
                     const temp = txnList[i]
                     var data = temp.actions[0].data
                     result[count] = {}
-                    result[count].type = data[1] == this.address ? 'send' : 'receive'
+                    result[count].type = data[1] == address ? 'send' : 'receive'
                     result[count].value = parseFloat(data[3])
-                    result[count].address = data[1] == this.address ? data[2] : data[1]
+                    result[count].address = data[1] == address ? data[2] : data[1]
                     result[count].time = new Date(temp.time / 10 ** 6).getTime() / 1000
                     result[count].txid = temp.hash
                     count++

@@ -81,12 +81,8 @@ const WalletService = {
         EmpowService.updatePrivateKey(accounts.privateKey)
     },
 
-    getTransactionHistories(accountInfo) {
-        const coinName = accountInfo.name.toLowerCase()
-        if (coinName == 'empow') {
-            return EmpowService.getTransactionHistories()
-        }
-        return []
+    getTransactionHistories(address) {
+        return EmpowService.getTransactionHistories(address)
     },
 
     async getAccountInfo(callback) {
@@ -132,10 +128,8 @@ const WalletService = {
     },
 
     send(data) {
-        const { coinInfo, to, value, memo } = data
-        if (coinInfo.name.toLowerCase() == 'empow') {
-            return EmpowService.send(to, value, memo)
-        }
+        const { to, value, memo } = data
+        return EmpowService.send(to, value, memo)
     },
 
     lock() {

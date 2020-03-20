@@ -308,7 +308,6 @@ class HomeController extends Component {
     }
 
     onSend = () => {
-        const accountInfo = this.props.accountInfo
         const { sendTo, sendAmount, sendMemo } = this.state
 
         this.setState({
@@ -316,7 +315,7 @@ class HomeController extends Component {
             sendError: false
         })
 
-        PopupAPI.send(accountInfo, sendTo, sendAmount, sendMemo).then(res => {
+        PopupAPI.send(sendTo, sendAmount, sendMemo).then(res => {
             this.setState({
                 sendLoading: false,
                 sendSuccess: res.txid ? res.txid : 'Send Transaction successfully',
@@ -641,13 +640,11 @@ class HomeController extends Component {
                             </li>
                             <li>
                                 <input placeholder="Amount" type="number" name="sendAmount" onBlur={(e) => this.onBlurInput(e)}></input>
-                                <span className="symbol" style={{ fontSize: '14px' }}>{accountInfo.symbol}</span>
+                                <span className="symbol" style={{ fontSize: '14px' }}>EM</span>
                             </li>
-                            {accountInfo.memo &&
-                                <li>
-                                    <input placeholder="Memo" name="sendMemo" onBlur={(e) => this.onBlurInput(e)}></input>
-                                </li>
-                            }
+                            <li>
+                                <input placeholder="Memo" name="sendMemo" onBlur={(e) => this.onBlurInput(e)}></input>
+                            </li>
                         </ul>
                         {this.state.sendError &&
                             <div>
@@ -672,7 +669,7 @@ class HomeController extends Component {
                         return <li onClick={() => this.onChangeAccount(account.address)}>
                             <div className="left">
                                 <p className="label">{account.username ? account.username : `Wallet ${index + 1}`}</p>
-                                <p className="address">{account.address.substring(0, 15) + '...'}</p>
+                                <p className="address">{account.address.substring(25, account.address.length) + '...'}</p>
                             </div>
                             <div className="right">
                                 <p className="balance">{Utils.formatCurrency(account.balance, 2)} EM</p>

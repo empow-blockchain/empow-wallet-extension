@@ -17,7 +17,7 @@ class CoinDetailController extends Component {
     };
 
     async componentDidMount() {
-        PopupAPI.getTransactionHistories(this.props.accountInfo).then(res => {
+        PopupAPI.getTransactionHistories(this.props.accountInfo.address).then(res => {
             this.setState({
                 histories: res
             })

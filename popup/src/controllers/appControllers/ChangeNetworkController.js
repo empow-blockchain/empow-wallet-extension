@@ -18,7 +18,8 @@ class ChangeNetworkController extends Component {
             networks: props.networks,
             name: '',
             nodeUrl: '',
-            error: false
+            error: false,
+            loading: false
         }
     }
 
@@ -47,38 +48,50 @@ class ChangeNetworkController extends Component {
         var { networks, name, nodeUrl } = this.state
 
         this.setState({
-            error: false
+            error: false,
+            loading: true
         })
         if (!name || !nodeUrl) {
             this.setState({
-                error: 'Chua nhap du thong tin'
+                error: 'Chua nhap du thong tin',
+                loading: false
             })
             return
         }
 
+        if (nodeUrl[nodeUrl.length - 1] === '/') {
+            nodeUrl = nodeUrl.substring(0, nodeUrl.length - 1)
+        }
+
         if (networks.find(x => x.url.toLowerCase() === nodeUrl.toLocaleLowerCase())) {
             this.setState({
-                error: 'Dup Node URL'
+                error: 'Dup Node URL',
+                loading: false
             })
             return;
         }
 
         const res = await Axios.get(`${nodeUrl}/getChainInfo`)
-        if (!res || !res.net_name) {
+        if (!res || !res.data || !res.data.net_name) {
             this.setState({
-                error: 'Wrong Node URL'
+                error: 'Wrong Node URL',
+                loading: false
             })
             return;
         }
 
         var apiUrl = NODE.MAINNET.API_URL
         var txUrl = NODE.MAINNET.TX_URL
-        if (res.net_name === 'testnet') {
+        if (res.data.net_name === 'testnet') {
             apiUrl = NODE.TESTNET.API_URL
             txUrl = NODE.TESTNET.TX_URL
         }
 
-        PopupAPI.addNetwork({ name: this.state.name, url: this.state.nodeUrl, selected: true, apiUrl, txUrl })
+        this.setState({
+            loading: false
+        })
+
+        PopupAPI.addNetwork({ name: name, url: nodeUrl, selected: true, apiUrl, txUrl })
         this.props.onBackHome()
     }
 
