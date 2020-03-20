@@ -273,7 +273,15 @@ class BackgroundAPI extends EventEmitter {
     }
 
     async setAccounts(messageUUID, accounts) {
+        if (!accounts.find(x => x.address === StorageService.selectedAccount.address)) {
+            StorageService.selectedAccount = accounts[0]
+            StorageService.saveSelectedAccount()
+            EmpowService.updatePrivateKey(accounts[0].privateKey)
+            this.popupUpdate('updateSelectedAccount', accounts[0])
+        }
+
         WalletService.setAccounts(accounts)
+        this.popupUpdate('updateAccounts', accounts)
     }
 
     async send(messageUUID, data) {

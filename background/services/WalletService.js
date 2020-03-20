@@ -96,18 +96,16 @@ const WalletService = {
         const data = await EmpowService.getAccountInfo()
         StorageService.selectedAccount = Object.assign(StorageService.selectedAccount, data)
 
-        callback()
+        if (callback) {
+            callback()
+        }
     },
 
     setAccounts(accounts) {
-        if (!accounts.find(x => x.address === StorageService.selectedAccount.address)) {
-            StorageService.selectedAccount = accounts[0]
-
-        }
         StorageService.accounts = accounts
         StorageService.saveAccounts()
 
-        this.getAccountInfo(this.updateBalanceCallback)
+        this.getAccountInfo()
     },
 
     startPool(callback) {
