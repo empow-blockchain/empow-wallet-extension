@@ -348,7 +348,7 @@ class HomeController extends Component {
                         <p>EM</p>
                     </div>
                     <div className="content" style={{ width: '90px' }}>
-                        <p style={{ color: 'white' }}>{Utils.formatCurrency(accountInfo.balance)} EM</p>
+                        <p style={{ color: 'white' }}>{Utils.formatCurrency(accountInfo.balance, 7)} EM</p>
                         {/* {value.marketData && <p>{CURRENCY_SYMBOL[setting.currency.toUpperCase()]} {parseFloat(value.balance * value.marketData[setting.currency]).toFixed(2).toString()}</p>} */}
                     </div>
                     <div className="chart">
@@ -675,7 +675,7 @@ class HomeController extends Component {
                                 <p className="address">{account.address.substring(0, 15) + '...'}</p>
                             </div>
                             <div className="right">
-                                <p className="balance" onClick={() => this.onChangeAccount(account.address)}>{Utils.formatCurrency(account.balance, 2)} EM</p>
+                                <p className="balance" onClick={() => this.onChangeAccount(account.address)}>{Utils.formatCurrency(account.balance, 7)} EM</p>
                                 <div onClick={() => this.onDeleteAccount(account.address)} className="delete"><img src={DeleteIcon}></img></div>
                             </div>
                         </li>
@@ -721,7 +721,7 @@ class HomeController extends Component {
                         </div>
                     </div>
                     <div className="titler">
-                        <p className="balance">{Utils.formatCurrency(accountInfo.balance, 8)} EM</p>
+                        <p className="balance">{Utils.formatCurrency(accountInfo.balance, 7)} EM</p>
                         {/* <p>{CURRENCY_SYMBOL[setting.currency.toUpperCase()]} {parseFloat(accountInfo.balance * accountInfo.marketData[setting.currency]).toFixed(2).toString()}</p> */}
                         <p style={{ fontSize: '14px', marginTop: 10 }}>{accountInfo.username}</p>
                         <p style={{ fontSize: '10px' }}>{accountInfo.address}</p>

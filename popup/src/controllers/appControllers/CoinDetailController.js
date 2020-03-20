@@ -80,8 +80,8 @@ class CoinDetailController extends Component {
                                 <p className="time">{typeof value.time == 'number' ? Utils.formatTime(value.time) : value.time}</p>
                             </a>
                             <div className="content">
-                                {value.type == 'receive' && <p style={{ color: '#6ae82d' }}>+{parseFloat(parseFloat(value.value).toFixed(8)).toString()}</p>}
-                                {value.type == 'send' && <p style={{ color: '#e74c3c' }}>-{parseFloat(parseFloat(value.value).toFixed(8)).toString()}</p>}
+                                {value.type == 'receive' && <p style={{ color: '#6ae82d' }}>+{Utils.formatCurrency(value.value, 7)}</p>}
+                                {value.type == 'send' && <p style={{ color: '#e74c3c' }}>-{Utils.formatCurrency(value.value, 7)}</p>}
                                 <p>{accountInfo.symbol}</p>
                             </div>
                         </li>)
