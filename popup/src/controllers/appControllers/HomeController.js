@@ -113,6 +113,9 @@ class HomeController extends Component {
         }
         var newAccounts = accounts.filter(x => x.address !== address)
         PopupAPI.setAccounts(newAccounts)
+        this.setState({
+            showSwitchWallet: !this.state.showSwitchWallet
+        })
     }
 
     selectMenuStake = (index) => {
@@ -666,13 +669,13 @@ class HomeController extends Component {
             <div className="overlay">
                 <ul className="list-wallet">
                     {accounts.map((account, index) => {
-                        return <li onClick={() => this.onChangeAccount(account.address)}>
-                            <div className="left">
+                        return <li>
+                            <div className="left" onClick={() => this.onChangeAccount(account.address)}>
                                 <p className="label">{account.username ? account.username : `Wallet ${index + 1}`}</p>
                                 <p className="address">{account.address.substring(0, 15) + '...'}</p>
                             </div>
                             <div className="right">
-                                <p className="balance">{Utils.formatCurrency(account.balance, 2)} EM</p>
+                                <p className="balance" onClick={() => this.onChangeAccount(account.address)}>{Utils.formatCurrency(account.balance, 2)} EM</p>
                                 <div onClick={() => this.onDeleteAccount(account.address)} className="delete"><img src={DeleteIcon}></img></div>
                             </div>
                         </li>

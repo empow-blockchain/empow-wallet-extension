@@ -151,6 +151,9 @@ class BackgroundAPI extends EventEmitter {
     }
 
     addNetwork(messageUUID, network) {
+        for (let i = 0; i < StorageService.setting.networks.length; i++) {
+            StorageService.setting.networks[i].selected = false
+        }
         StorageService.setting.networks.push(network)
         StorageService.saveSetting()
         WalletService.changeNetwork(network, async () => {
