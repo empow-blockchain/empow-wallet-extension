@@ -177,6 +177,7 @@ class BackgroundAPI extends EventEmitter {
         var account = StorageService.accounts.find(x => x.address === address)
         StorageService.selectedAccount = account
         StorageService.saveSelectedAccount()
+        EmpowService.updatePrivateKey(account.privateKey)
         this.popupUpdate('updateSelectedAccount', account)
     }
 

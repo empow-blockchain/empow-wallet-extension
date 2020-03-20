@@ -669,7 +669,7 @@ class HomeController extends Component {
                         return <li onClick={() => this.onChangeAccount(account.address)}>
                             <div className="left">
                                 <p className="label">{account.username ? account.username : `Wallet ${index + 1}`}</p>
-                                <p className="address">{account.address.substring(25, account.address.length) + '...'}</p>
+                                <p className="address">{account.address.substring(0, 15) + '...'}</p>
                             </div>
                             <div className="right">
                                 <p className="balance">{Utils.formatCurrency(account.balance, 2)} EM</p>
