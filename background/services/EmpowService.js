@@ -104,15 +104,19 @@ const EmpowService = {
                 username: username.data === 'null' ? null : username.data
             }
         } catch (err) {
-            return {}
+            return {
+                balance: 0,
+                username: null
+            }
         }
     },
 
     async getAccountInfo() {
+        const ram = await this.getRamPrice()
+
         try {
             const result = await this.rpc.blockchain.getAccountInfo(this.address)
             const username = await this.rpc.blockchain.getContractStorage("auth.empow", `s_${this.address}`, "", true)
-            const ram = await this.getRamPrice()
             var maxUnpledge = 0;
             for (let i = 0; i < result.gas_info.pledged_info.length; i++) {
                 if (result.gas_info.pledged_info[i].pledger === this.address) {
@@ -130,7 +134,16 @@ const EmpowService = {
                 username: username.data === 'null' ? null : username.data
             }
         } catch (err) {
-            return {}
+            return {
+                balance: 0,
+                gasLimit: 1,
+                gasUsed: 1,
+                ramLimit: 1,
+                ramUsed: 1,
+                ramPrice: ram.data.buy_price,
+                maxUnpledge: 0,
+                username: null
+            }
         }
     },
 

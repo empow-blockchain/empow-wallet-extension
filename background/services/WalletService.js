@@ -85,16 +85,22 @@ const WalletService = {
         return EmpowService.getTransactionHistories(address)
     },
 
-    async getAccountInfo(callback) {
+    async getSelectedAccountInfo(callback = null) {
+        const data = await EmpowService.getAccountInfo()
+        StorageService.selectedAccount = Object.assign(StorageService.selectedAccount, data)
+
+        if (callback) {
+            callback()
+        }
+    },
+
+    async getAccountInfo(callback = null) {
         var accounts = StorageService.accounts || []
         for (let i = 0; i < accounts.length; i++) {
             const info = await EmpowService.getBalanceAndUsername(accounts[i].address)
             StorageService.accounts[i].balance = info.balance;
             StorageService.accounts[i].username = info.username;
         }
-
-        const data = await EmpowService.getAccountInfo()
-        StorageService.selectedAccount = Object.assign(StorageService.selectedAccount, data)
 
         if (callback) {
             callback()
@@ -113,10 +119,12 @@ const WalletService = {
         console.log("START POOLING")
 
         this.getAccountInfo(callback)
+        this.getSelectedAccountInfo(callback)
 
         this.pool = setInterval(() => {
             this.lastOpenPopupTime = new Date().getTime()
             this.getAccountInfo(callback)
+            this.getSelectedAccountInfo(callback)
         }, 10000)
     },
 

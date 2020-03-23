@@ -74,7 +74,7 @@ class SettingController extends Component {
     }
 
     onTermOfService = () => {
-        window.open('https://empow.io/termsofservice','_blank');
+        window.open('https://about.empow.io/termsofservice','_blank');
     }
 
     onBackSetting = () => {

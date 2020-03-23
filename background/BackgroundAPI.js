@@ -181,7 +181,9 @@ class BackgroundAPI extends EventEmitter {
         StorageService.selectedAccount = account
         StorageService.saveSelectedAccount()
         EmpowService.updatePrivateKey(account.privateKey)
-        this.popupUpdate('updateSelectedAccount', account)
+        WalletService.getSelectedAccountInfo( () => {
+            this.popupUpdate('updateSelectedAccount', account)
+        })
     }
 
     async getTransactionHistories(messageUUID, address) {
