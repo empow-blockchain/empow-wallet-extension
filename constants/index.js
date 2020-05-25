@@ -11,8 +11,6 @@ export const APP_STATE = {
     SIGN_TRANSACTION: 10,
 }
 
-export const API_ENDPOINT = "https://api.empow.io"
-
 export const CURRENCY_SYMBOL = {
     USD: '$',
     EUR: '€',

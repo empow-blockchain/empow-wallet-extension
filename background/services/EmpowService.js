@@ -168,7 +168,9 @@ const EmpowService = {
             if (tx.gasLimit) tempTx.gasLimit = tx.gasLimit
             if (tx.gasRatio) tempTx.gasRatio = tx.gasRatio
 
-            tempTx.addApprove("*", "unlimited")
+            if(!tempTx.amount_limit || tempTx.amount_limit.length === 0) {
+                tempTx.addApprove("*", "unlimited")
+            }
 
             let handler = this.empow.signAndSend(tempTx)
 
@@ -178,6 +180,7 @@ const EmpowService = {
                 })
             } else {
                 handler.on('pending', res => {
+                    console.log(res);
                     resolve(res)
                 })
             }
