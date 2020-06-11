@@ -190,6 +190,10 @@ class BackgroundAPI extends EventEmitter {
         this.popupResponse(messageUUID, await WalletService.getTransactionHistories(address))
     }
 
+    async getAddressByUsername(messageUUID, username) {
+        this.popupResponse(messageUUID, await WalletService.getAddressByUsername(username))
+    }
+
     getTransactionQueue(messageUUID) {
         if (!WalletService.transactionQueue) {
             this.popupResponse(messageUUID, null)

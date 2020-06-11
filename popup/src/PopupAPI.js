@@ -60,6 +60,11 @@ const PopupAPI = {
             this.handle.send('Request', 'getTransactionHistories', address, resolve, reject)
         ))
     },
+    getAddressByUsername(username) {
+        return new Promise((resolve, reject) => (
+            this.handle.send('Request', 'getAddressByUsername', username, resolve, reject)
+        ))
+    },
     getTransactionQueue() {
         return new Promise((resolve, reject) => (
             this.handle.send('Request', 'getTransactionQueue', null, resolve, reject)

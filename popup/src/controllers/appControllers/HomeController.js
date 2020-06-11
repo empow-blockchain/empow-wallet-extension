@@ -310,6 +310,14 @@ class HomeController extends Component {
         })
     }
 
+    isAddress = (address) => {
+        if (address.length === 49 && address[0] === 'E' && address[1] === 'M') {
+            return true;
+        }
+
+        return false;
+    }
+
     onSend = () => {
         const { sendTo, sendAmount, sendMemo } = this.state
 
@@ -318,18 +326,44 @@ class HomeController extends Component {
             sendError: false
         })
 
-        PopupAPI.send(sendTo, sendAmount, sendMemo).then(res => {
-            this.setState({
-                sendLoading: false,
-                sendSuccess: res.txid ? res.txid : 'Send Transaction successfully',
-                showTransactionSuccess: true
+        if (!this.isAddress(sendTo)) {
+            PopupAPI.getAddressByUsername(sendTo).then(res => {
+                PopupAPI.send(res.address, sendAmount, sendMemo).then(res => {
+                    this.setState({
+                        sendLoading: false,
+                        sendSuccess: res.txid ? res.txid : 'Send Transaction successfully',
+                        showTransactionSuccess: true
+                    })
+                }).catch(error => {
+                    this.setState({
+                        sendError: error,
+                        sendLoading: false
+                    })
+                })
+            }).catch(error => {
+                this.setState({
+                    sendError: error,
+                    sendLoading: false
+                })
             })
-        }).catch(error => {
-            this.setState({
-                sendError: error,
-                sendLoading: false
+        } else {
+            PopupAPI.send(sendTo, sendAmount, sendMemo).then(res => {
+                this.setState({
+                    sendLoading: false,
+                    sendSuccess: res.txid ? res.txid : 'Send Transaction successfully',
+                    showTransactionSuccess: true
+                })
+            }).catch(error => {
+                this.setState({
+                    sendError: error,
+                    sendLoading: false
+                })
             })
-        })
+        }
+     
+
+
+      
     }
 
     renderListCoin() {
@@ -628,7 +662,6 @@ class HomeController extends Component {
 
     renderSend() {
         const { accountInfo } = this.props
-
         return (
             <div className="overlay">
                 <div className="waper">

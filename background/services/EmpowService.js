@@ -233,6 +233,17 @@ const EmpowService = {
             }
         })
     },
+
+    getAddressByUsername(username) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await Axios.get(`${this.apiURL}/getAddressByUsername/${username}`)
+                resolve(res.data)
+            } catch (error) {
+                resolve(error.response.data)
+            }
+        })
+    },
 }
 
 export default EmpowService

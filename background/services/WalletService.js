@@ -85,6 +85,10 @@ const WalletService = {
         return EmpowService.getTransactionHistories(address)
     },
 
+    getAddressByUsername(username) {
+        return EmpowService.getAddressByUsername(username)
+    },
+
     async getSelectedAccountInfo(callback = null) {
         const data = await EmpowService.getAccountInfo()
         StorageService.selectedAccount = Object.assign(StorageService.selectedAccount, data)
