@@ -53,6 +53,8 @@ class BackgroundAPI extends EventEmitter {
                 accountInfo: WalletService.accountInfo[index]
             })
         })
+
+        EmpowService.checkBlacklist()
     }
 
     onPopupDisconnect() {
@@ -242,6 +244,9 @@ class BackgroundAPI extends EventEmitter {
 
         // update time to autolock
         WalletService.lastOpenPopupTime = new Date().getTime()
+
+        // check blacklist
+        EmpowService.checkBlacklist()
     }
 
     unlock(messageUUID, password) {

