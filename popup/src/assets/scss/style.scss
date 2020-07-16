@@ -852,12 +852,13 @@ textarea {
                 box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1);
                 background-color: #413d5d;
                 z-index: 2;
-                height: auto;
+                height: 500px;
                 width: calc(100% - 36px);
                 margin: 20px auto;
                 margin-top: 60px;
                 border-radius: 18px;
-                overflow: hidden;
+                overflow: auto;
+                overflow-x: hidden;
                 border: 1px solid #534e73;
 
                 li {

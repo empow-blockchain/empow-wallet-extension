@@ -700,7 +700,7 @@ class HomeController extends Component {
         const { accounts } = this.props
         return (
             <div className="overlay">
-                <ul className="list-wallet">
+                <ul className="list-wallet scroll" style={{padding: 0}}>
                     {accounts.map((account, index) => {
                         return <li>
                             <div className="left" onClick={() => this.onChangeAccount(account.address)}>
